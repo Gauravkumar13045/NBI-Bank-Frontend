@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./src/images/logo/logo-nbi-new.png" width="220" />
+<img src="./nbi-bank/public/logo-nbi-new.png" width="220" />
 
 # ✨ NBI — NATIONAL BANK OF INDIA ✨
 
