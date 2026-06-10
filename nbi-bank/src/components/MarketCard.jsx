@@ -338,7 +338,7 @@ function MarketChart() {
 
 
                     <h2
-                        className="text-[#d8b45c] text-3xl font-medium mb-6"
+                        className="text-[#d8b45c]  text-2xl  lg:text-3xl font-medium mb-6"
                         style={{ fontFamily: "Playfair Display" }}
                     >
                         Insights That Matter
@@ -405,8 +405,8 @@ function MarketChart() {
                                 <div>
 
                                     <p className={status === "open"
-                                        ? "text-green-500 font-medium"
-                                        : "text-red-500 font-medium"}>
+                                        ? "text-green-500 font-medium text-md"
+                                        : "text-red-500 font-medium text-sm"}>
 
                                         {status === "open"
                                             ? "Market Open"

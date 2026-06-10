@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../images/logo/logo-nbi-new.png";
+import rbi from "../images/logo/rbi.png";
 import heroImage from "../images/bg.png";
 import phone from "../images/phone.png";
 import blackFaceCard from "../images/cards/blackfacecard.png";
@@ -192,11 +193,11 @@ function Home() {
 
                         <nav className="hidden lg:flex items-center gap-10 text-white font-medium font-mono text-lg">
                             <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">Personal</a>
-                            <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">Business</a>
-                            <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">Wealth</a>
+                            <a href="#business" className="hover:text-[#d8b45c] transition-all duration-300">Business</a>
+                            <a href="#wealth" className="hover:text-[#d8b45c] transition-all duration-300">Wealth</a>
                             <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">NRI</a>
-                            <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">Loans</a>
-                            <a href="#" className="hover:text-[#d8b45c] transition-all duration-300">Digital Banking</a>
+                            <a href="#loan" className="hover:text-[#d8b45c] transition-all duration-300">Loans</a>
+                            <a href="#DigitalBanking" className="hover:text-[#d8b45c] transition-all duration-300">Digital Banking</a>
                         </nav>
 
 
@@ -243,12 +244,12 @@ function Home() {
                     >
                         <div className="px-6 py-8  flex flex-col gap-6 text-black text-lg font-bold font-mono ">
                             <a href="#" className="transition p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold rounded-lg">Personal</a>
-                            <a href="#" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg ">Business</a>
-                            <a href="#" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Wealth</a>
+                            <a href="#business" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg ">Business</a>
+                            <a href="#wealth" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Wealth</a>
                             <a href="#" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">NRI</a>
-                            <a href="#" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Loans</a>
-                            <a href="#" className="p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Digital Banking</a>
-                            <a href="#" className="p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Support</a>
+                            <a href="#loan" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Loans</a>
+                            <a href="#DigitalBanking" className="p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Digital Banking</a>
+                            <a href="#loan" className="p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg">Support</a>
                         </div>
                     </div>
                 )}
@@ -398,7 +399,7 @@ function Home() {
 
 
 
-                        <div className="flex items-center">
+                        <div className="flex items-center" id="business">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-10 m-1 text-[#d8b45c] icon icon-tabler icons-tabler-outline icon-tabler-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M4 14v-3a8 8 0 1 1 16 0v3" /> <path d="M18 19c0 1.657 -2.686 3 -6 3" /> <path d="M4 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3" /> <path d="M15 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3" /> </svg>
 
                             <p className="m-1 ml-2 font-medium">
@@ -417,7 +418,7 @@ function Home() {
 
             <div className="" style={{ background: "linear-gradient(to right, #0D0A02 0%, #0F0A03 5%, #100B04 10%, #0E0B04 20%, #0A0703 30%, #090603 40%, #080603 50%, #070502 60%, #080501 70%, #0E0A04 80%, #0E0A04 90%, #0A0804 100%)", }}>
 
-                <h1 className="text-white text-center mt-45 min-[357px]:mt-10 md:mt-35 xl:mt-0  text-xl md:text-2xl xl:text-4xl " style={{ fontFamily: "Playfair Display" }}><span className="text-[#d8b45c] ">Banking Solutions </span>Tailored For You</h1>
+                <h1 className="text-white text-center pt-13 min-[357px]:pt-10 md:pt-35 xl:pt-0  text-xl md:text-2xl xl:text-4xl " style={{ fontFamily: "Playfair Display" }}><span className="text-[#d8b45c] ">Banking Solutions </span>Tailored For You</h1>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-6 p-8 lg:p-20">
 
@@ -492,20 +493,20 @@ function Home() {
 
                 </div>
 
-                <div className="flex items-center justify-center space-x-1 ">
+                <div className="flex items-center justify-center space-x-1 " id="wealth">
                     <h3 className="text-[#d8b45c] text-xl font-semibold cursor-pointer hover:text-[#f1da92] "> Explore All Services </h3>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-10 text-[#d8b45c] cursor-pointer hover:translate-x-2 "> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 12h.5m3 0h1.5m3 0h6" /> <path d="M15 16l4 -4" /> <path d="M15 8l4 4" /></svg>
                 </div>
 
 
 
-                <div className="p-5 mt-5 md:m-12">
+                <div className="p-5 mt-5 md:m-12" >
 
                     <div className="bg-black/25 backdrop-blur-xl border border-white/10 rounded-3xl p-12">
 
                         <div className="grid lg:grid-cols-2 gap-10 items-center">
 
-                            
+
                             <div>
 
                                 <p
@@ -522,9 +523,9 @@ function Home() {
                                     with unmatched benefits and rewards
                                 </p>
 
-                                <div className="flex items-center mt-10 space-x-1">
+                                <div className="flex items-center mt-10 space-x-1" >
 
-                                    <h3 className="text-[#d8b45c] text-md font-semibold cursor-pointer">
+                                    <h3 className="text-[#d8b45c] text-md font-semibold cursor-pointer" id="DigitalBanking" >
                                         View All Cards
                                     </h3>
 
@@ -537,6 +538,7 @@ function Home() {
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         className="w-8 text-[#d8b45c] cursor-pointer hover:translate-x-2 transition"
+
                                     >
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M5 12h.5m3 0h1.5m3 0h6" />
@@ -549,8 +551,8 @@ function Home() {
                             </div>
 
 
-                            
-                            <div className="relative h-50 flex justify-center items-center overflow-hidden">
+
+                            <div className="relative h-50 flex justify-center items-center overflow-hidden" >
 
                                 {cards.map((card, index) => {
 
@@ -623,7 +625,308 @@ function Home() {
 
                 </div>
 
-                <MarketWidget />
+                <div >
+                    <MarketWidget />
+                </div>
+
+                <footer className="mt-20 " id="loan">
+
+                    <div className="bg-black/30 border border-white/10 rounded-2xl  backdrop-blur-xl overflow-hidden">
+
+
+
+
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 p-8 lg:p-12">
+
+
+
+                           <div className="col-span-2 md:col-span-3 lg:col-span-1">
+
+                                <img
+                                    src={logo}
+                                    alt="NBI Logo"
+                                    className="w-48"
+                                />
+
+
+
+                                <p className="text-gray-400 mt-6 leading-relaxed text-sm">
+                                    Trusted by millions of customers across India
+                                    for our commitment to service, security and innovation.
+                                </p>
+
+                            </div>
+
+
+
+
+
+
+                            <div>
+
+                                <h3 className="text-[#d8b45c] font-semibold text-lg mb-5">
+                                    Products
+                                </h3>
+
+                                <div className="flex flex-col gap-3 text-gray-400 text-sm ">
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Accounts
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Cards
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Loans
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Investments
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Insurance
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                            <div>
+
+                                <h3 className="text-[#d8b45c] font-semibold text-lg mb-5">
+                                    Resources
+                                </h3>
+
+                                <div className="flex flex-col gap-3 text-gray-400 text-sm">
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Help Center
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        FAQs
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Fees & Charges
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Interest Rates
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Blog
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                            <div>
+
+                                <h3 className=" font-semibold text-lg mb-5 text-[#d8b45c]">
+                                    Support
+                                </h3>
+
+                                <div className="flex flex-col gap-3 text-gray-400 text-sm">
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Contact Us
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Locate Us
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Customer Support
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Grievance Redressal
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Feedback
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                            <div>
+
+                                <h3 className="1 font-semibold text-lg mb-5 text-[#d8b45c]" >
+                                    Legal
+                                </h3>
+
+                                <div className="flex flex-col gap-3 text-gray-400 text-sm">
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Privacy Policy
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Terms & Conditions
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Disclaimer
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Code of Commitment
+                                    </a>
+
+                                    <a href="#" className="hover:text-[#d8b45c] transition">
+                                        Regulatory Disclosures
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+                        <div className="border-t border-white/10"></div>
+
+
+
+
+
+
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 px-8 lg:px-12 py-6">
+
+
+
+
+                            <p className="text-gray-500 text-sm text-center lg:text-left">
+                                © 2026 National Bank of India. All rights reserved.
+                            </p>
+
+
+
+
+
+
+                            <div className="flex items-center gap-5">
+
+                                <p className="text-gray-400 text-sm">
+                                    Follow Us
+                                </p>
+
+
+
+                                <div className="flex items-center gap-3">
+
+
+
+
+                                    <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:border-[#d8b45c] hover:text-[#d8b45c] transition cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 text-[#d8b45c]" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                        </svg>
+
+                                    </div>
+
+
+
+
+
+
+                                    <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:border-[#d8b45c] hover:text-[#d8b45c] transition cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 text-[#d8b45c]" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99h-2.54V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z" />
+                                        </svg>
+
+                                    </div>
+
+
+
+
+
+
+                                    <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:border-[#d8b45c] hover:text-[#d8b45c] transition cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 text-[#d8b45c]" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M22.46 6c-.77.35-1.5.58-2.3.69a4.03 4.03 0 0 0 1.77-2.23 8.14 8.14 0 0 1-2.56.98 4.07 4.07 0 0 0-6.92 3.71A11.54 11.54 0 0 1 3.15 4.9a4.07 4.07 0 0 0 1.26 5.43 4 4 0 0 1-1.84-.5v.05a4.08 4.08 0 0 0 3.26 3.99 4.1 4.1 0 0 1-1.83.07 4.08 4.08 0 0 0 3.81 2.82A8.18 8.18 0 0 1 2 19.54 11.5 11.5 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.69v-.53A8.18 8.18 0 0 0 22.46 6z" />
+                                        </svg>
+
+                                    </div>
+
+
+
+
+
+
+                                    <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:scale-105 hover:border-[#d8b45c] hover:text-[#d8b45c] transition cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 text-[#d8b45c]" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1 5 2.12 5 3.5zM.5 8h4V24h-4V8zm7 0h3.8v2.2h.1c.5-.95 1.75-2.2 3.6-2.2 3.85 0 4.56 2.5 4.56 5.8V24h-4v-8.5c0-2-.04-4.5-2.8-4.5-2.8 0-3.2 2.2-3.2 4.4V24h-4V8z" />
+                                        </svg>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                            <div className="flex items-center gap-4">
+
+                                <div className="w-12 h-12 rounded-full  flex items-center justify-center">
+
+                                    <img src={rbi} className="opacity-90"></img>
+
+                                </div>
+
+
+
+                                <p className="text-gray-400 font-medium text-sm" >
+                                    RBI REGULATED
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <h6 className="text-center text-xs mt-3 text-[#737476] mb-5" >Made with ❤️ by Gaurav</h6>
+
+                    </div>
+
+                </footer>
+
+
 
 
 
