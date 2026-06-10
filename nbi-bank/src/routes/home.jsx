@@ -172,6 +172,35 @@ function Home() {
         };
 
     };
+    useEffect(() => {
+
+        const reveals = document.querySelectorAll(".reveal");
+
+        const observer = new IntersectionObserver(
+
+            (entries) => {
+
+                entries.forEach((entry) => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add("active");
+
+                    }
+
+                });
+
+            },
+
+            {
+                threshold: 0.15,
+            }
+
+        );
+
+        reveals.forEach((el) => observer.observe(el));
+
+    }, []);
 
 
     return (
@@ -271,12 +300,12 @@ function Home() {
                 <div className=" absolute top-65 left-5 sm:left-20 -translate-y-1/2 text-white z-10 ">
 
 
-                    <h1 className=" text-3xl sm:text-5xl md:text-6xl leading-tight " style={{ fontFamily: "Playfair Display" }}>
+                    <h1 className=" text-3xl sm:text-5xl md:text-6xl leading-tight reveal " style={{ fontFamily: "Playfair Display" }}>
                         India's Trusted<br></br>
                         Financial Partner<br></br>
                         For A Better <span className="text-[#d8b45c]" >Tomorrow</span>
                     </h1>
-                    <p className="mt-6 text-lg text-gray-300 max-w-150 font-sans">
+                    <p className="mt-6 text-lg text-gray-300 max-w-150 font-sans reveal">
                         Experience premium banking with world-class <br className="hidden min-[450px]:block"></br>
                         services designed for your success.
                     </p>
@@ -284,7 +313,7 @@ function Home() {
                     <div className="flex ">
 
                         <button
-                            className="mt-8  px-5 sm:px-8 min-[450px]:px-8 py-4 rounded-xl text-black font-semibold font-sans cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base"
+                            className=" reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 py-4 rounded-xl text-black font-semibold font-sans cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base"
                             style={{
                                 background:
                                     "linear-gradient(to bottom, #fff4c9 0%, #f1da92 12%, #d8b45c 28%, #a97824 90%)",
@@ -294,7 +323,7 @@ function Home() {
                         </button>
 
                         <button
-                            className="mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base">
+                            className="reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base">
                             Explore Services
                         </button>
                     </div>
@@ -306,7 +335,7 @@ function Home() {
                 </div>
 
 
-                <div className=" hidden xl:flex absolute justify-center items-center top-25 right-80 hover:z-1">
+                <div className=" hidden xl:flex absolute justify-center items-center top-25 right-80 hover:z-1 ">
 
                     <div
                         onMouseMove={handleMouseMove}
@@ -321,7 +350,7 @@ function Home() {
                         <img
                             src={phone}
                             alt=""
-                            className=" w-95  object-cover rounded-3xl shadow-2xl"
+                            className=" w-95  object-cover rounded-3xl shadow-2xl reveal"
                         />
 
                     </div>
@@ -343,7 +372,7 @@ function Home() {
                         <img
                             src={blackFaceCard}
                             alt=""
-                            className=" w-65  object-cover rounded-3xl shadow-2xl"
+                            className=" w-65  object-cover rounded-3xl shadow-2xl reveal"
                         />
 
                     </div>
@@ -352,7 +381,7 @@ function Home() {
 
 
                 <div className="flex flex-wrap ">
-                    <div className="absolute top-115 md:top-130 lg:top-140 text-xs md:text-base left-1/2 -translate-x-1/2 w-[95%] max-w-7x text-white border border-[#725f4a] rounded-2xl bg-white/0 backdrop-blur-md p-5 md:p-7 grid grid-cols-1 min-[305px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-6">
+                    <div className="absolute top-115 md:top-130 lg:top-140 text-xs md:text-base left-1/2 reveal -translate-x-1/2 w-[95%] max-w-7x text-white border border-[#725f4a] rounded-2xl bg-white/0 backdrop-blur-md p-5 md:p-7 grid grid-cols-1 min-[305px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-6">
 
                         <div className="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-10 m-1 text-[#d8b45c] icon icon-tabler icons-tabler-outline icon-tabler-shield-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -418,12 +447,12 @@ function Home() {
 
             <div className="" style={{ background: "linear-gradient(to right, #0D0A02 0%, #0F0A03 5%, #100B04 10%, #0E0B04 20%, #0A0703 30%, #090603 40%, #080603 50%, #070502 60%, #080501 70%, #0E0A04 80%, #0E0A04 90%, #0A0804 100%)", }}>
 
-                <h1 className="text-white text-center pt-13 min-[357px]:pt-10 md:pt-35 xl:pt-0  text-xl md:text-2xl xl:text-4xl " style={{ fontFamily: "Playfair Display" }}><span className="text-[#d8b45c] ">Banking Solutions </span>Tailored For You</h1>
+                <h1 className="text-white text-center pt-13 min-[357px]:pt-10 md:pt-35 xl:pt-0  text-xl md:text-2xl xl:text-4xl reveal" style={{ fontFamily: "Playfair Display" }}><span className="text-[#d8b45c] ">Banking Solutions </span>Tailored For You</h1>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-6 p-8 lg:p-20">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-5 gap-6 p-8 lg:p-20 reveal">
 
 
-                    <div className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/0 hover:border-[#d8b45c]/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#d8b45c]/10 cursor-pointer">
+                    <div className="group  bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/0 hover:border-[#d8b45c]/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#d8b45c]/10 cursor-pointer">
 
                         <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#d8b45c]/20 to-[#d8b45c]/5 flex items-center justify-center mb-6 group-hover:scale-110 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-[#d8b45c]" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"> <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /> <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" /> <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
@@ -500,7 +529,7 @@ function Home() {
 
 
 
-                <div className="p-5 mt-5 md:m-12" >
+                <div className="p-5 mt-5 md:m-12 reveal" >
 
                     <div className="bg-black/25 backdrop-blur-xl border border-white/10 rounded-3xl p-12">
 
@@ -552,7 +581,7 @@ function Home() {
 
 
 
-                            <div className="relative h-50 flex justify-center items-center overflow-hidden" >
+                            <div className="relative h-50 flex justify-center items-center overflow-hidden reveal" >
 
                                 {cards.map((card, index) => {
 
@@ -625,11 +654,11 @@ function Home() {
 
                 </div>
 
-                <div >
+                <div className="reveal" >
                     <MarketWidget />
                 </div>
 
-                <footer className="mt-20 " id="loan">
+                <footer className="mt-20 reveal" id="loan ">
 
                     <div className="bg-black/30 border border-white/10 rounded-2xl  backdrop-blur-xl overflow-hidden">
 
@@ -640,7 +669,7 @@ function Home() {
 
 
 
-                           <div className="col-span-2 md:col-span-3 lg:col-span-1">
+                            <div className="col-span-2 md:col-span-3 lg:col-span-1">
 
                                 <img
                                     src={logo}

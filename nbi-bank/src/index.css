@@ -2,3 +2,50 @@
 html {
     scroll-behavior: smooth;
 }
+body {
+    overflow-x: hidden;
+}
+.reveal {
+
+    opacity: 0;
+    transform: translateY(80px);
+    transition: all 1s ease;
+
+}
+
+
+
+.reveal.active {
+
+    opacity: 1;
+    transform: translateY(0);
+
+}
+.reveal-left {
+
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 1s ease;
+
+}
+
+.reveal-left.active {
+
+    opacity: 1;
+    transform: translateX(0);
+
+}
+.reveal-right {
+
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 1s ease;
+
+}
+
+.reveal-right.active {
+
+    opacity: 1;
+    transform: translateX(0);
+
+}
