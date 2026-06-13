@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Loginbg from "../images/loginbg2.png";
 import logo from "../images/logo/logo-nbi-new.png";
 import formbg from "../images/formbg.png";
@@ -6,15 +6,15 @@ import formbg from "../images/formbg.png";
 
 
 
-function Login() {
+function Signup() {
 
-     const [focusedField, setFocusedField] = useState("");
+    const [focusedField, setFocusedField] = useState("");
 
     return (
 
 
         <div
-            className="relative h-screen w-full sm:bg-cover bg-top-left p-5"
+            className="relative h-screen w-full sm:bg-cover bg-top-left p-5 "
             style={{
                 backgroundImage: `url(${Loginbg})`,
             }}
@@ -135,9 +135,9 @@ function Login() {
                 </div>
 
 
-                <div className="flex flex-col items-center justify-center w-full md:w-1/2 py-6">
+                <div className="flex flex-col items-center justify-center w-full md:w-1/2 py-0">
 
-                    <div className="md:hidden bg-black/50 backdrop-blur-sm rounded-xl px-4 py-2 ">
+                    <div className="md:hidden bg-black/40 backdrop-blur-sm rounded-xl px-4 py-2 ">
                         <img
                             src={logo}
                             alt="NBI - National Bank of India"
@@ -146,16 +146,18 @@ function Login() {
                     </div>
 
 
-                    <div className=" backdrop-blur-xl border border-white/10 rounded-2xl p-8 w-full mt-5 md:m-0 max-w-md mx-4 text-center" style={{
-                        backgroundImage: `url(${formbg})`,
-                    }}>
+                    <div
+                        className=" backdrop-blur-xl border border-white/10 rounded-2xl p-8 w-full max-w-md mx-4 mt-5 text-center h-[70vh] overflow-y-auto overflow-x-hidden scrollbar-hide" style={{
+                            backgroundImage: `url(${formbg})`,
+                        }}
+                    >
                         <div className="leading-tight">
-                            <h1 className="text-white text-3xl " style={{ fontFamily: "Playfair Display" }} >
-                                Welcome <span className="text-[#d8b45c]">Back</span>
+                            <h1 className="text-[#d8b45c] min-[381px]:text-3xl text-[26px]  " style={{ fontFamily: "Playfair Display" }} >
+                                Create Your Account
                             </h1>
 
-                            <p className="text-gray-400 text-sm mt-0.5">
-                                Login to access your <span className="text-[#d8b45c]">NBI</span> account
+                            <p className="text-gray-400 text-sm mt-1">
+                                Join millions of trusted <span className="text-[#d8b45c]">NBI</span> customers
                             </p>
                             <div className="h-[0.5px] w-12 mx-auto mt-4" style={{ background: "linear-gradient(to right, #d8b45c 0%, #d8b45c 70%, transparent 100%)", }}></div>
 
@@ -163,22 +165,55 @@ function Login() {
 
 
                         <div className="text-left mt-5">
+
                             <div>
-                                <label className={` text-sm ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Email Address or Mobile number</label><br></br>
+                                <label className={` text-sm ${focusedField === "fullname" ? "text-[#d8b45c] " : "text-white" } `}>Full Name</label>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-user text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "fullname" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`  }> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                                    <input type="text" required placeholder="Full Name" onFocus={() => setFocusedField("fullname")} onBlur={() => setFocusedField("")} className="focus:peer-placeholder-shown:text-red-500 mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"
+                                    />
+                                </div>
+
+
+                            </div>
+
+                            <div className="mt-3">
+                                <label className={` text-sm ${focusedField === "emailaddress" ? "text-[#d8b45c] " : "text-white" } `}>Email Address</label><br></br>
 
                                 <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-mail text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></svg>
-                                    <input type="text" placeholder="Email address or Mobile number" onFocus={() => setFocusedField("EmailAddressorMobilenumber")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-mail text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "emailaddress" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></svg>
+                                    <input type="email" required placeholder="Email address" onFocus={() => setFocusedField("emailaddress")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
 
                                 </div>
                             </div>
 
                             <div className="mt-3">
-                                <label className={` text-sm ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Password</label><br></br>
+                                <label className={` text-sm ${focusedField === "MobileNumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Mobile Number</label><br></br>
+
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-phone text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "MobileNumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /></svg>
+                                    <input type="tel" required maxLength={10} onFocus={() => setFocusedField("MobileNumber")} onBlur={() => setFocusedField("")} placeholder="Mobile number" className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
+
+                                </div>
+                            </div>
+
+                            <div className="mt-3">
+                                <label className={` text-sm ${focusedField === "CreatePassword" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Create Password</label><br></br>
 
                                 <div className="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
-                                    <input type="password" onFocus={() => setFocusedField("Password")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Password" ></input>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "CreatePassword" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                                    <input type="password" onFocus={() => setFocusedField("CreatePassword")} onBlur={() => setFocusedField("")} required className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Create a strong Password" ></input>
+
+                                </div>
+
+                            </div>
+
+                            <div className="mt-3">
+                                <label className={` text-sm ${focusedField === "ConfirmPassword" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Confirm Password</label><br></br>
+
+                                <div className="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "ConfirmPassword" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                                    <input type="password" required onFocus={() => setFocusedField("ConfirmPassword")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Confirm your Password" ></input>
 
                                 </div>
 
@@ -190,20 +225,18 @@ function Login() {
 
                                     <input type="checkbox" className="size-4 accent-[#d8b45c] cursor-pointer" />
 
-                                    <label className="text-gray-300 text-sm cursor-pointer">Remember Me</label>
+                                    <label className="text-gray-300 text-sm cursor-pointer">I agree to the <span className="text-[#d8b45c]">Terms of Service </span>and <span className="text-[#d8b45c]">Privacy Policy</span></label>
 
                                 </div>
 
-                                <button className="text-sm text-[#d8b45c] font-medium  hover:text-[#f1da92] transition cursor-pointer">
-                                    Forgot Password?
-                                </button>
+
 
                             </div>
 
                             <button
-                                className="w-full mt-5 py-3 rounded-xl font-medium text-black text-md cursor-pointer transition-all duration-300 hover:scale-[1.02]  active:scale-95 shadow-xl  bg-[linear-gradient(135deg,#A66C19,#c88b2f,#CF9533,#E1A940,#DFA43C,#c88b2f,#BB7E25)] "
+                                className="w-full mt-5 py-3 rounded-xl font-medium text-black text-md cursor-pointer transition-all duration-300 hover:scale-105  active:scale-95 shadow-xl  bg-[linear-gradient(135deg,#A66C19,#c88b2f,#CF9533,#E1A940,#DFA43C,#c88b2f,#BB7E25)] "
                             >
-                                Login to Account
+                                Create an Account
                             </button>
 
 
@@ -271,10 +304,15 @@ function Login() {
                             </div>
 
 
-                            <p className="text-center text-gray-500 text-xs mt-5 cursor-pointer group">
-                                Don't have an account?{" "}
-                                <span className="text-[#d8b45c] cursor-pointer group-hover:text-[#f9d16c] font-medium">&nbsp; Sign Up</span>
-                            </p>
+                            <div className="flex justify-center mt-5">
+                                <button className="text-gray-500 text-xs cursor-pointer group">
+                                    Already have an account? &nbsp;
+                                    <span className="text-[#d8b45c] cursor-pointer group-hover:text-[#f9d16c] font-medium">
+                                        &nbsp;Login Now
+                                    </span>
+                                </button>
+                            </div>
+
 
 
 
@@ -287,7 +325,7 @@ function Login() {
 
                     </div>
                 </div>
-
+                
             </div>
 
         </div>
@@ -299,4 +337,4 @@ function Login() {
     )
 }
 
-export default Login 
+export default Signup
