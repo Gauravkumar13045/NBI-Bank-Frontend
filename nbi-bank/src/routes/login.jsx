@@ -2,6 +2,8 @@ import React,{useState} from "react";
 import Loginbg from "../images/loginbg2.png";
 import logo from "../images/logo/logo-nbi-new.png";
 import formbg from "../images/formbg.png";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -9,6 +11,7 @@ import formbg from "../images/formbg.png";
 function Login() {
 
      const [focusedField, setFocusedField] = useState("");
+     const navigate = useNavigate();
 
     return (
 
@@ -31,6 +34,7 @@ function Login() {
                         src={logo}
                         alt="NBI - National Bank of India"
                         className=" w-45  md:w-55 p-3  object-contain cursor-pointer"
+                        onClick={() => navigate("/")}
                     />
 
                     <div style={{ fontFamily: "Playfair Display" }} className="text-white ml-5 mt-10 xl:mt-25 hidden md:block xl:text-4xl text-2xl">
@@ -142,6 +146,7 @@ function Login() {
                             src={logo}
                             alt="NBI - National Bank of India"
                             className="w-45 md:hidden object-contain cursor-pointer "
+                            onClick={() => navigate("/")}
                         />
                     </div>
 
@@ -271,7 +276,7 @@ function Login() {
                             </div>
 
 
-                            <p className="text-center text-gray-500 text-xs mt-5 cursor-pointer group">
+                            <p className="text-center text-gray-500 text-xs mt-5 cursor-pointer group" onClick={() => navigate("/signup")}>
                                 Don't have an account?{" "}
                                 <span className="text-[#d8b45c] cursor-pointer group-hover:text-[#f9d16c] font-medium">&nbsp; Sign Up</span>
                             </p>

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Loginbg from "../images/loginbg2.png";
 import logo from "../images/logo/logo-nbi-new.png";
 import formbg from "../images/formbg.png";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -9,6 +11,7 @@ import formbg from "../images/formbg.png";
 function Signup() {
 
     const [focusedField, setFocusedField] = useState("");
+    const navigate = useNavigate();
 
     return (
 
@@ -31,6 +34,7 @@ function Signup() {
                         src={logo}
                         alt="NBI - National Bank of India"
                         className=" w-45  md:w-55 p-3  object-contain cursor-pointer"
+                        onClick={() => navigate("/")}
                     />
 
                     <div style={{ fontFamily: "Playfair Display" }} className="text-white ml-5 mt-10 xl:mt-25 hidden md:block xl:text-4xl text-2xl">
@@ -142,15 +146,12 @@ function Signup() {
                             src={logo}
                             alt="NBI - National Bank of India"
                             className="w-45 md:hidden object-contain cursor-pointer "
+                            onClick={() => navigate("/")}
                         />
                     </div>
 
 
-                    <div
-                        className=" backdrop-blur-xl border border-white/10 rounded-2xl p-8 w-full max-w-md mx-4 mt-5 text-center h-[70vh] overflow-y-auto overflow-x-hidden scrollbar-hide" style={{
-                            backgroundImage: `url(${formbg})`,
-                        }}
-                    >
+                    <div className=" backdrop-blur-xl border border-white/10 rounded-2xl p-8 w-full max-w-md mx-4 mt-5 text-center h-[70vh] overflow-y-auto overflow-x-hidden scrollbar-hide" style={{backgroundImage: `url(${formbg})`,}}>
                         <div className="leading-tight">
                             <h1 className="text-[#d8b45c] min-[381px]:text-3xl text-[26px]  " style={{ fontFamily: "Playfair Display" }} >
                                 Create Your Account
@@ -304,7 +305,7 @@ function Signup() {
                             </div>
 
 
-                            <div className="flex justify-center mt-5">
+                            <div className="flex justify-center mt-5" onClick={() => navigate("/login")}>
                                 <button className="text-gray-500 text-xs cursor-pointer group">
                                     Already have an account? &nbsp;
                                     <span className="text-[#d8b45c] cursor-pointer group-hover:text-[#f9d16c] font-medium">

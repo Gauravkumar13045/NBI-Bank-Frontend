@@ -9,7 +9,7 @@ import GoldenCard from "../images/cards/goldencard.png";
 import SilverCard from "../images/cards/silvercard.png";
 import { motion } from "framer-motion";
 import MarketWidget from "../components/MarketCard";
-
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -19,6 +19,7 @@ import MarketWidget from "../components/MarketCard";
 
 function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
 
 
@@ -216,6 +217,7 @@ function Home() {
                                 src={logo}
                                 alt="NBI - National Bank of India"
                                 className=" w-35  md:40 mt-2  object-contain cursor-pointer"
+                                onClick={() => navigate("/")}
                             />
                         </div>
 
@@ -235,7 +237,7 @@ function Home() {
                             <button
                                 className="px-3 md:px-7 cursor-pointer py-3 font-mono font-semibold rounded-lg  text-black transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
                                 style={{ background: "linear-gradient(to bottom, #fff4c9 0%, #f1da92 12%, #d8b45c 28%, #a97824 90%)", }}
-                            >
+                                onClick={() => navigate("/login")}>
                                 Login
                             </button>
 
@@ -318,12 +320,16 @@ function Home() {
                                 background:
                                     "linear-gradient(to bottom, #fff4c9 0%, #f1da92 12%, #d8b45c 28%, #a97824 90%)",
                             }}
-                        >
+                            onClick={() => navigate("/signup")}>
                             Open an Account
                         </button>
 
                         <button
-                            className="reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base">
+                            className="reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base"onClick={() => {
+    document
+      .getElementById("business")
+      ?.scrollIntoView({ behavior: "smooth" });
+  }}>
                             Explore Services
                         </button>
                     </div>
@@ -674,7 +680,8 @@ function Home() {
                                 <img
                                     src={logo}
                                     alt="NBI Logo"
-                                    className="w-48"
+                                    className="w-48 cursor-pointer"
+                                    onClick={() => navigate("/")}
                                 />
 
 
