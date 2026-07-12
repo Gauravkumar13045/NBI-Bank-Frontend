@@ -1,0 +1,84 @@
+{
+  "transaction": [
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='#ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='2' width='20' height='20' rx='4' fill='#FF9900'/><path d='M7 14c2 1.5 8 1.5 10 0' stroke='#ffffff' stroke-width='1.5'/><path d='M16 13.5c1 -0.3 2 0.2 2 1c0 1 -1.5 1.5 -1.5 1.5' stroke='#ffffff' stroke-width='1.2'/></svg>",
+      "PaymentName": "Amazon Shopping",
+      "PaymentDate": "12 Jun 2026",
+      "PaymentTime": "10:42 AM",
+      "Categories": "Shopping",
+      "Currency": "₹",
+      "PaymentAmount": "4,299.00",
+      "Type": "debit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#e50914'/><text x='12' y='16' font-size='9' fill='#ffffff' text-anchor='middle' font-family='Arial' font-weight='bold'>N</text></svg>",
+      "PaymentName": "Netflix Subscription",
+      "PaymentDate": "10 Dec 2026",
+      "PaymentTime": "11:04 AM",
+      "Categories": "Entertainment",
+      "Currency": "₹",
+      "PaymentAmount": "649.00",
+      "Type": "debit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#0F6E56'/><path d='M7 13a5 5 0 0 1 10 0' stroke='#ffffff' stroke-width='1.5' fill='none'/><circle cx='12' cy='13' r='1.5' fill='#ffffff'/></svg>",
+      "PaymentName": "Salary Credit - HDFC Corp",
+      "PaymentDate": "10 Jun 2026",
+      "PaymentTime": "09:15 AM",
+      "Categories": "Income",
+      "Currency": "₹",
+      "PaymentAmount": "1,25,000.00",
+      "Type": "credit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#FC8019'/><path d='M8 7l8 0M8 11l8 0M8 15l5 0' stroke='#ffffff' stroke-width='1.5' stroke-linecap='round'/></svg>",
+      "PaymentName": "Swiggy Food Order",
+      "PaymentDate": "09 Jun 2026",
+      "PaymentTime": "08:30 PM",
+      "Categories": "Food & Dining",
+      "Currency": "₹",
+      "PaymentAmount": "648.00",
+      "Type": "debit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#534AB7'/><path d='M12 7v10M8 11l4 -4l4 4' stroke='#ffffff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "PaymentName": "UPI Transfer to Rahul K.",
+      "PaymentDate": "08 Jun 2026",
+      "PaymentTime": "07:12 PM",
+      "Categories": "Transfer",
+      "Currency": "₹",
+      "PaymentAmount": "5,000.00",
+      "Type": "debit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#378ADD'/><path d='M6 16l4 -4l3 3l5 -6' stroke='#ffffff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M14 9h4v4' stroke='#ffffff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "PaymentName": "Dividend Credit - Reliance",
+      "PaymentDate": "07 Jun 2026",
+      "PaymentTime": "11:05 AM",
+      "Categories": "Investment",
+      "Currency": "₹",
+      "PaymentAmount": "3,200.00",
+      "Type": "credit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#1976D2'/><path d='M6 9l6 -4l6 4M7 10v6M12 10v6M17 10v6M5 16h14' stroke='#ffffff' stroke-width='1.3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "PaymentName": "Home Loan EMI",
+      "PaymentDate": "05 Jun 2026",
+      "PaymentTime": "06:00 AM",
+      "Categories": "Loan",
+      "Currency": "₹",
+      "PaymentAmount": "28,500.00",
+      "Type": "debit"
+    },
+    {
+      "img": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='2' width='20' height='20' rx='4' fill='#D85A30'/><path d='M9 7h6l-1 10h-4z' stroke='#ffffff' stroke-width='1.2' fill='none'/><path d='M11 4v3M13 4v3' stroke='#ffffff' stroke-width='1.2'/></svg>",
+      "PaymentName": "Electricity Bill Payment",
+      "PaymentDate": "03 Jun 2026",
+      "PaymentTime": "02:18 PM",
+      "Categories": "Bills",
+      "Currency": "₹",
+      "PaymentAmount": "2,340.00",
+      "Type": "debit"
+    }
+  ]
+}

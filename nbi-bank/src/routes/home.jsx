@@ -269,10 +269,7 @@ function Home() {
 
 
                 {isMenuOpen && (
-                    <div className="lg:hidden w-full fixed"
-                        style={{ background: "linear-gradient(to bottom, #fff4c9 0%, #f1da92 12%, #d8b45c 28%, #a97824 90%)", }}
-
-                    >
+                    <div className="lg:hidden w-full fixed" style={{ background: "linear-gradient(to bottom, #fff4c9 0%, #f1da92 12%, #d8b45c 28%, #a97824 90%)", }}>
                         <div className="px-6 py-8  flex flex-col gap-6 text-black text-lg font-bold font-mono ">
                             <a href="#" className="transition p-2 active:bg-[#d8b45c] hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold rounded-lg">Personal</a>
                             <a href="#business" className="active:bg-[#d8b45c] p-2 hover:bg-[#d8b45c] hover:text-black hover:p-2 hover:rounded-lg hover:font-semibold transition rounded-lg ">Business</a>
@@ -325,11 +322,11 @@ function Home() {
                         </button>
 
                         <button
-                            className="reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base"onClick={() => {
-    document
-      .getElementById("business")
-      ?.scrollIntoView({ behavior: "smooth" });
-  }}>
+                            className="reveal mt-8  px-5 sm:px-8 min-[450px]:px-8 hover:text-[#d8b45c] active:text-[#d8b45c] ml-5  py-4 rounded-xl cursor-pointer font-semibold border-[#725f4a] border-2 text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-xs min-[450px]:text-base" onClick={() => {
+                                document
+                                    .getElementById("business")
+                                    ?.scrollIntoView({ behavior: "smooth" });
+                            }}>
                             Explore Services
                         </button>
                     </div>
