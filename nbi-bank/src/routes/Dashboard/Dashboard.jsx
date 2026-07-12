@@ -387,7 +387,6 @@ function Dashboard() {
 
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
                                 <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
-
                                     <p className="text-[#d8b45c] text-sm font-medium">Current Account</p>
                                     <p className="text-[#d8b45c] text-xs">XXXX 6549 5187</p><br></br>
 
@@ -449,7 +448,6 @@ function Dashboard() {
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
                                 <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
                                     <p className="text-[#d8b45c] text-sm font-medium"> Reward Points</p>
-
 
 
                                     <p className="text-white text-sm font-medium mt-1"><span>{valueRewardPercent}</span> / <span className="text-[#d8b45c]">20,000</span><span className="text-[#d8b45c] text-xs"> Pts</span></p>
@@ -1004,7 +1002,6 @@ function Dashboard() {
             </div>
 
         </div>
-
     );
 }
 
