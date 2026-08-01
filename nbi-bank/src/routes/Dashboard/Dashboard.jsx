@@ -305,7 +305,7 @@ function Dashboard() {
                                 <label className="text-[#e5af3f] text-[13px] font-medium">Nickname (Optional)</label>
                                 <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
                                     <div className="text-[#e5af3f] mr-3">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
                                             <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
                                             <line x1="7" y1="7" x2="7.01" y2="7"></line>
                                         </svg>
