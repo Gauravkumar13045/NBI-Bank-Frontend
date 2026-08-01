@@ -1,0 +1,37 @@
+{
+    "Cards": [
+        {
+            "id": 1,
+            "img": "/cardImage/blackcard.png",
+            "textColor": "#d8b45c",
+            "mutedColor": "#9f874b",
+            "CardNumber": "•••• •••• •••• 4821",
+            "CardName": "GAURAV KUMAR",
+            "ValidThru": "09/28",
+            "CVV": "•••",
+            "Status": "Active"
+        },
+        {
+            "id": 2,
+            "img": "/cardImage/goldencard.png",
+            "textColor": "#ffffff",
+            "mutedColor": "#ffffff",
+            "CardNumber": "•••• •••• •••• 3951",
+            "CardName": "GAURAV KUMAR",
+            "ValidThru": "04/31",
+            "CVV": "•••",
+            "Status": "Frozen"
+        },
+        {
+            "id": 3,
+            "img": "/cardImage/silvercard.png",
+            "textColor": "black",
+            "mutedColor": "black",
+            "CardNumber": "•••• •••• •••• 6345",
+            "CardName": "GAURAV KUMAR",
+            "ValidThru": "07/35",
+            "CVV": "•••",
+            "Status": "Frozen"
+        }
+    ]
+}

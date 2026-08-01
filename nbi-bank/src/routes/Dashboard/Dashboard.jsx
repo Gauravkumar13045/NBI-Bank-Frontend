@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Logo from "../../images/logo/logo-nbi-new.png";
 import rain from "../../images/rainy.png";
 import qrscanner from "../../images/icons8-qr-code.gif"
@@ -13,6 +13,11 @@ import {
 } from "recharts";
 import IncomeExpenseChart from "../../components/IncomeExpenseChart";
 import CircularProgress from "../../components/CircularProgress";
+import DounutChart from "../../components/dounutChart"
+import BlackCard from "../../images/cards/blackcard.png";
+import GoldenCard from "../../images/cards/goldencard.png";
+import SilverCard from "../../images/cards/silvercard.png";
+
 
 
 
@@ -46,7 +51,7 @@ function Dashboard() {
 
             try {
 
-                const response = await fetch("/transaction.json");
+                const response = await fetch("/json/transaction.json");
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch transactions");
@@ -72,7 +77,85 @@ function Dashboard() {
 
     }, []);
 
+    const [chartDialogBox, SetchartDialogBox] = useState(false);
 
+    const [activeCard, setActivecard] = useState(0);
+
+
+    const [cardInfo, setCardInfo] = useState([]);
+
+    useEffect(() => {
+        async function fetchCard() {
+            const card = await fetch("/json/cardInfo.json");
+            const response = await card.json();
+            setCardInfo(response.Cards);
+        }
+        fetchCard();
+
+
+    }, []);
+
+
+
+
+
+    const cardContainerRef = useRef(null);
+
+
+    const handleScroll = () => {
+        const container = cardContainerRef.current;
+
+        if (!container) return;
+
+        const index = Math.round(
+            container.scrollLeft / container.clientWidth
+        );
+
+        setActivecard(index);
+    };
+
+
+    const goToCard = (index) => {
+        const container = cardContainerRef.current;
+
+        if (!container) return;
+
+        container.scrollTo({
+            left: container.clientWidth * index,
+            behavior: "smooth",
+        });
+
+        setActivecard(index);
+    };
+
+
+    const [showAddContact, setShowAddContact] = useState(false);
+
+    const [FetchContactDetail, setFetchContactDetail] = useState([]);
+
+    useEffect(() => {
+        async function ContactDetailFetcher() {
+            const fetchContact = await fetch("/json/QuickContact.json");
+            const ContactDetail = await fetchContact.json();
+            setFetchContactDetail(ContactDetail.QuickContact);
+        }
+        ContactDetailFetcher();
+
+    }, []);
+
+
+    const [upcomingPaymentDetail, setUpcomingPaymentDetail] = useState([]);
+
+    useEffect(() => {
+        async function UpcomingPayment() {
+
+            const UpcomingPayment = await fetch("./json/UpcomingPayments.json");
+            const UpcomingPaymentFetch = await UpcomingPayment.json();
+            setUpcomingPaymentDetail(UpcomingPaymentFetch.Payments);
+        }
+        UpcomingPayment();
+
+    }, []);
 
 
 
@@ -89,7 +172,187 @@ function Dashboard() {
 
 
     return (
+
         <div className="h-screen bg-black flex">
+            {/* Dialog Box for the Quick Transfer */}
+            {showAddContact && (
+                <div className=" w-full bg-black/60  absolute min-h-screen z-9999  flex items-center justify-center p-4  font-sans text-white">
+
+                    <div className="w-full max-w-160 bg-[#121212] border border-[#2a2a2a] rounded-xl p-6 sm:p-8 shadow-2xl">
+
+
+                        <div className="flex justify-between items-start mb-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full border border-[#e5af3f] flex items-center justify-center text-[#e5af3f] shrink-0">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <line x1="19" y1="8" x2="19" y2="14"></line>
+                                        <line x1="22" y1="11" x2="16" y2="11"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 className="text-xl font-semibold mb-1">Add New Contact</h2>
+                                    <p className="text-sm text-[#888888]">Add a new beneficiary for quick transfers</p>
+                                </div>
+                            </div>
+                            <button className="text-[#e5af3f] hover:opacity-80 transition-opacity p-1 cursor-pointer" onClick={() => setShowAddContact(false)}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+
+                        <form onSubmit={(e) => e.preventDefault()}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[#e5af3f] text-[13px] font-medium">Name</label>
+                                    <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
+                                        <div className="text-[#e5af3f] mr-3">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                        </div>
+                                        <input
+                                            required
+                                            type="text"
+                                            placeholder="Enter full name"
+                                            className="w-full bg-transparent border-none text-white text-sm py-4 outline-none placeholder-[#555555]"
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[#e5af3f] text-[13px] font-medium">Mobile Number</label>
+                                    <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
+                                        <div className="text-[#e5af3f] mr-3">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                            </svg>
+                                        </div>
+                                        <input
+                                            required
+                                            type="Number"
+                                            placeholder="Enter mobile number"
+                                            className="w-full bg-transparent border-none text-white text-sm py-4 outline-none placeholder-[#555555]"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-col-1 xl:grid-cols-2 xl:gap-5 ">
+
+                                <div className="flex flex-col gap-2 mb-6">
+                                    <label className="text-[#e5af3f] text-[13px] font-medium">Account Number (Optional)</label>
+                                    <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
+                                        <div className="text-[#e5af3f] mr-3">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter account number"
+                                            className="w-full bg-transparent border-none text-white text-sm py-4 outline-none placeholder-[#555555]"
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div className="flex flex-col gap-2 mb-6">
+                                    <label className="text-[#e5af3f] text-[13px] font-medium">Bank</label>
+                                    <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
+                                        <div className="text-[#e5af3f] mr-3">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">
+                                                <path d="M3 21h18"></path>
+                                                <path d="M3 10h18"></path>
+                                                <path d="M5 6l7-3 7 3"></path>
+                                                <path d="M4 10v11"></path>
+                                                <path d="M20 10v11"></path>
+                                                <path d="M8 14v3"></path>
+                                                <path d="M12 14v3"></path>
+                                                <path d="M16 14v3"></path>
+                                            </svg>
+                                        </div>
+                                        <select required className="w-full  bg-transparent border-none text-[#555555] text-sm py-4 outline-none appearance-none cursor-pointer">
+                                            <option value="" defaultChecked className="bg-[#d8b45c] text-black ">Select your bank</option>
+                                            <option value="1" className="text-[#d8b45c] bg-black hover:text-black hover:bg-[#d8b45c] ">SBI-State Bank of India</option>
+                                            <option value="2" className="text-[#d8b45c] bg-black">PNB-Punjab National Bank</option>
+                                            <option value="3" className="text-[#d8b45c] bg-black">NBI-National Bank of India</option>
+                                            <option value="4" className="text-[#d8b45c] bg-black">BOI-Bank of India</option>
+                                            <option value="5" className="text-[#d8b45c] bg-black">Indian Bank</option>
+
+
+
+
+                                        </select>
+                                        <div className="absolute right-4 text-[#e5af3f] pointer-events-none">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-2 mb-8">
+                                <label className="text-[#e5af3f] text-[13px] font-medium">Nickname (Optional)</label>
+                                <div className="relative flex items-center bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 focus-within:border-[#e5af3f] transition-colors">
+                                    <div className="text-[#e5af3f] mr-3">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+                                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Home, Office, Family"
+                                        className="w-full bg-transparent border-none text-white text-sm py-4 outline-none placeholder-[#555555]"
+                                    />
+                                </div>
+                            </div>
+
+
+                            <div className="bg-[#161616] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-4 mb-8">
+                                <div className="text-[#e5af3f] shrink-0">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                        <polyline points="9 12 11 14 15 10"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="text-[#e5af3f] text-sm font-medium mb-1">Secure & Trusted</h4>
+                                    <p className="text-[13px] text-[#888888]">All transactions are protected with bank-level security</p>
+                                </div>
+                            </div>
+
+
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <button
+                                    type="button"
+                                    className="flex-1 py-4 px-6 rounded-lg font-semibold cursor-pointer text-[15px] text-white border border-[#e5af3f] bg-transparent hover:bg-white/5 transition-colors"
+                                    onClick={() => setShowAddContact(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 cursor-pointer py-4 px-6 rounded-lg font-semibold text-[15px] text-black border border-[#e5af3f] bg-[#e5af3f] hover:bg-[#d4a035] transition-colors"
+                                >
+                                    Add Contact
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            )}
 
 
             <aside className=" border-r border-white/10 hidden md:flex flex-col bg-black lg:w-60 w-30">
@@ -144,7 +407,7 @@ function Dashboard() {
 
                 </div>
 
-                <div className="flex items-center ml-10 gap-3  py-3 rounded-xl cursor-pointer hover:bg-red-500/10 transition-all duration-300">
+                <div className="flex items-center justify-center gap-3   py-3 rounded-xl cursor-pointer hover:bg-red-500/10 transition-all duration-300">
 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-logout w-7  cursor-pointer text-red-500 ">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -353,15 +616,7 @@ function Dashboard() {
 
                                     </div>
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart
-                                            data={data}
-                                            margin={{
-                                                top: 20,
-                                                right: 10,
-                                                left: 0,
-                                                bottom: 25
-                                            }}
-                                        >
+                                        <AreaChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 25 }}>
                                             <defs>
                                                 <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="0%" stopColor="#d8b45c" stopOpacity={0.35} />
@@ -755,238 +1010,263 @@ function Dashboard() {
 
                         <p className="text-[#d8b45c] font-semibold ">Transaction Analytics</p>
 
-                        <div className="grid grid-cols-[2fr_1fr] p-5 gap-4">
 
 
-                            <div className=" grid-cols-3 w-full gap-3 xl:grid hidden">
-                                <div className="border border-[#494133] rounded-lg p-3">
-                                    <div className="flex gap-3">
+
+                        <div className="grid lg:grid-cols-[70%_30%] gap-5">
+
+                            <div className="flex flex-col gap-5">
+
+                                {/* Cards */}
+                                <div className="grid grid-cols-3 gap-4">
+
+                                    <div className="border border-[#494133] rounded-lg p-3">
+                                        <div className="flex gap-3">
 
 
-                                        <div className="group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border text-green-500   transition-all duration-300 ">
-                                            <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
+                                            <div className="group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border text-green-500   transition-all duration-300 ">
+                                                <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
 
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth={2}
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                className="relative z-10 h-8 w-8 text-green-500"
-                                            >
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" />
-                                                <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" />
-                                            </svg>
-                                        </div>
-
-
-                                        <div className="block text-white p-2">
-                                            <p className="text-md font-semibold">
-                                                Total Income
-                                            </p>
-
-                                            <p className="text-green-500 text-lg font-bold">
-                                                <span> ₹</span> 69,21,475
-                                            </p>
-
-                                            <div className="mt-2 flex items-center gap-1">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 24 24"
                                                     fill="none"
                                                     stroke="currentColor"
-                                                    strokeWidth={3}
+                                                    strokeWidth={2}
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
-                                                    className="w-4 h-4 text-green-500"
+                                                    className="relative z-10 h-8 w-8 text-green-500"
                                                 >
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <line x1="12" y1="19" x2="12" y2="5" />
-                                                    <polyline points="5 12 12 5 19 12" />
+                                                    <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" />
+                                                    <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" />
                                                 </svg>
-
-                                                <p className="text-green-500 font-semibold text-xs">
-                                                    12.4%
-                                                </p>
-
-                                                <span className="text-gray-400 text-xs">
-                                                    vs last month
-                                                </span>
                                             </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
 
 
-
-
-
-
-
-
-                                <div className="border border-[#494133] rounded-lg p-3">
-                                    <div className="flex gap-3">
-
-
-                                        <div className="group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border border-red-500  transition-all duration-300 ">
-                                            <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
-
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trending-down  h-7 w-7 text-red-500">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M3 7l6 6l4 -4l8 8" />
-                                                <path d="M21 10l0 7l-7 0" />
-                                            </svg>
-                                        </div>
-
-
-                                        <div className="block text-white p-2 ">
-                                            <p className="text-md font-semibold">
-                                                Total Expense
-                                            </p>
-
-                                            <p className="text-red-500 text-lg font-bold">
-                                                <span> ₹</span> 21,65,231
-                                            </p>
-
-                                            <div className="mt-2 flex justify-center items-center gap-1">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth={3}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="w-4 h-4 text-red-500 rotate-180"
-                                                >
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <line x1="12" y1="19" x2="12" y2="5" />
-                                                    <polyline points="5 12 12 5 19 12" />
-                                                </svg>
-
-                                                <p className="text-red-500 font-semibold text-xs">
-                                                    23.6%
+                                            <div className="block text-white p-2">
+                                                <p className="text-md font-semibold">
+                                                    Total Income
                                                 </p>
 
-                                                <span className="text-gray-400 text-xs">
-                                                    vs last month
-                                                </span>
+                                                <p className="text-green-500 text-lg font-bold">
+                                                    <span> ₹</span> 69,21,475
+                                                </p>
+
+                                                <div className="mt-2 flex items-center gap-1">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth={3}
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="w-4 h-4 text-green-500"
+                                                    >
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <line x1="12" y1="19" x2="12" y2="5" />
+                                                        <polyline points="5 12 12 5 19 12" />
+                                                    </svg>
+
+                                                    <p className="text-green-500 font-semibold text-xs">
+                                                        12.4%
+                                                    </p>
+
+                                                    <span className="text-gray-400 text-xs">
+                                                        vs last month
+                                                    </span>
+                                                </div>
                                             </div>
 
                                         </div>
 
                                     </div>
 
-                                </div>
 
 
-                                <div className="border border-[#494133] rounded-lg p-3 pr-0">
-                                    <div className="flex gap-3">
 
 
-                                        <div className="  group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border text-yellow-600   transition-all duration-300 ">
-                                            <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
-
-                                            <svg className="relative z-10 h-8 w-8 text-yellow-600" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="28" cy="10" r="0.8" /><circle cx="35" cy="6" r="0.8" /><circle cx="43" cy="8" r="0.8" /><circle cx="50" cy="6" r="0.8" /><circle cx="57" cy="10" r="0.8" /><circle cx="26" cy="17" r="0.8" /><circle cx="33" cy="14" r="0.8" /><circle cx="41" cy="15" r="0.8" /><circle cx="49" cy="14" r="0.8" /><circle cx="56" cy="17" r="0.8" /><circle cx="30" cy="22" r="0.8" /><circle cx="38" cy="20" r="0.8" /><circle cx="46" cy="20" r="0.8" /><circle cx="54" cy="22" r="0.8" /></g><circle cx="42" cy="28" r="14" stroke="currentColor" strokeWidth="3" fill="none" /><text x="42" y="35" fontFamily="Arial, Helvetica, sans-serif" fontSize="16" fontWeight="700" textAnchor="middle" fill="currentColor">$</text><g stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M10 49L25 45L38 52" /><path d="M10 58L33 66L58 53" /><path d="M38 52L54 47C57 46 60 47 61 50C62 53 60 56 57 58L41 66" /><path d="M31 52L43 52" /></g><g fill="currentColor"><circle cx="28" cy="55" r="1" /><circle cx="31" cy="56" r="1" /><circle cx="34" cy="57" r="1" /><circle cx="37" cy="58" r="1" /></g></svg>
-                                        </div>
+                                    <div className="border border-[#494133] rounded-lg p-3">
+                                        <div className="flex gap-3">
 
 
-                                        <div className="block text-white p-2">
-                                            <p className="text-md font-semibold">
-                                                Total Investment
-                                            </p>
+                                            <div className="group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border border-red-500  transition-all duration-300 ">
+                                                <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
 
-                                            <p className="text-yellow-600 text-lg font-bold">
-                                                <span> ₹</span> 90,86,706
-                                            </p>
-
-                                            <div className="mt-2 flex items-center gap-1">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth={3}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="w-4 h-4 text-yellow-600"
-                                                >
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trending-down  h-7 w-7 text-red-500">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <line x1="12" y1="19" x2="12" y2="5" />
-                                                    <polyline points="5 12 12 5 19 12" />
+                                                    <path d="M3 7l6 6l4 -4l8 8" />
+                                                    <path d="M21 10l0 7l-7 0" />
                                                 </svg>
+                                            </div>
 
 
-
-
-                                                <p className="text-yellow-600 font-semibold text-xs">
-                                                    12.4%
+                                            <div className="block text-white p-2 ">
+                                                <p className="text-md font-semibold">
+                                                    Total Expense
                                                 </p>
 
-                                                <span className="text-gray-400 text-xs">
-                                                    vs last month
-                                                </span>
+                                                <p className="text-red-500 text-lg font-bold">
+                                                    <span> ₹</span> 21,65,231
+                                                </p>
+
+                                                <div className="mt-2 flex justify-center items-center gap-1">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth={3}
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="w-4 h-4 text-red-500 rotate-180"
+                                                    >
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <line x1="12" y1="19" x2="12" y2="5" />
+                                                        <polyline points="5 12 12 5 19 12" />
+                                                    </svg>
+
+                                                    <p className="text-red-500 font-semibold text-xs">
+                                                        23.6%
+                                                    </p>
+
+                                                    <span className="text-gray-400 text-xs">
+                                                        vs last month
+                                                    </span>
+                                                </div>
+
                                             </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+                                    <div className="border border-[#494133] rounded-lg p-3 pr-0">
+                                        <div className="flex gap-3">
+
+
+                                            <div className="  group relative flex mt-3 h-11 w-11 items-center justify-center align-middle rounded-2xl border text-yellow-600   transition-all duration-300 ">
+                                                <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-[#d8b45c]/10 via-transparent to-[#d8b45c]/20 "></div>
+
+                                                <svg className="relative z-10 h-8 w-8 text-yellow-600" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="28" cy="10" r="0.8" /><circle cx="35" cy="6" r="0.8" /><circle cx="43" cy="8" r="0.8" /><circle cx="50" cy="6" r="0.8" /><circle cx="57" cy="10" r="0.8" /><circle cx="26" cy="17" r="0.8" /><circle cx="33" cy="14" r="0.8" /><circle cx="41" cy="15" r="0.8" /><circle cx="49" cy="14" r="0.8" /><circle cx="56" cy="17" r="0.8" /><circle cx="30" cy="22" r="0.8" /><circle cx="38" cy="20" r="0.8" /><circle cx="46" cy="20" r="0.8" /><circle cx="54" cy="22" r="0.8" /></g><circle cx="42" cy="28" r="14" stroke="currentColor" strokeWidth="3" fill="none" /><text x="42" y="35" fontFamily="Arial, Helvetica, sans-serif" fontSize="16" fontWeight="700" textAnchor="middle" fill="currentColor">$</text><g stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M10 49L25 45L38 52" /><path d="M10 58L33 66L58 53" /><path d="M38 52L54 47C57 46 60 47 61 50C62 53 60 56 57 58L41 66" /><path d="M31 52L43 52" /></g><g fill="currentColor"><circle cx="28" cy="55" r="1" /><circle cx="31" cy="56" r="1" /><circle cx="34" cy="57" r="1" /><circle cx="37" cy="58" r="1" /></g></svg>
+                                            </div>
+
+
+                                            <div className="block text-white p-2">
+                                                <p className="text-md font-semibold">
+                                                    Total Investment
+                                                </p>
+
+                                                <p className="text-yellow-600 text-lg font-bold">
+                                                    <span> ₹</span> 90,86,706
+                                                </p>
+
+                                                <div className="mt-2 flex items-center gap-1">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth={3}
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="w-4 h-4 text-yellow-600 "
+                                                    >
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <line x1="12" y1="19" x2="12" y2="5" />
+                                                        <polyline points="5 12 12 5 19 12" />
+                                                    </svg>
+
+
+
+
+                                                    <p className="text-yellow-600 font-semibold text-xs">
+                                                        12.4%
+                                                    </p>
+
+                                                    <span className="text-gray-400 text-xs">
+                                                        vs last month
+                                                    </span>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
 
                                 </div>
 
+                                {/* Area Chart */}
+                                <div className="border rounded-xl">
+
+
+
+                                    <div className="border border-[#494133] p-4 rounded-lg">
+                                        <div className="flex items-center justify-between w-full">
+
+
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-white font-medium">
+                                                    Income vs Expenses Overview
+                                                </p>
+
+                                                <div className="relative group">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 text-gray-500 cursor-pointer"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /> <path d="M12 9h.01" /> <path d="M11 12h1v4h1" /></svg>
+
+                                                    <div className="absolute left-0 top-7 hidden group-hover:block w-80 p-2 rounded-lg border border-[#544724] bg-black shadow shadow-[#544724] z-50">
+                                                        <p className="text-white text-xs">
+                                                            Displays a comparison of your income and expenses over the selected period.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div className="flex items-center gap-1 border border-[#d8b45c] rounded-lg px-3 py-2 cursor-pointer hover:scale-103 transition-all duration-100" onClick={() => { SetchartDialogBox(!chartDialogBox) }}>
+                                                    <button className="text-white text-xs cursor-pointer">
+                                                        Chart Type
+                                                    </button>
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 text-yellow-500" > <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M6 9l6 6l6 -6" /> </svg>
+
+
+
+                                                </div>
+                                                <div className={`border  border-[#615027] text-sm text-center text-white absolute mt-1 p-3 w-[9%] rounded-xl bg-black z-50 ${chartDialogBox ? "block transition-all duration-100" : "hidden"}`}>
+                                                    <p className="p-1.5 hover:bg-[#d8b45c] hover:text-black hover:font-semibold cursor-pointer rounded-lg">Area Chart</p>
+                                                    <p className="p-1.5 hover:bg-[#d8b45c] hover:text-black hover:font-semibold cursor-pointer rounded-lg">Line Chart</p>
+                                                    <p className="p-1.5 hover:bg-[#d8b45c] hover:text-black hover:font-semibold cursor-pointer rounded-lg">Bar Chart</p>
+
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div className="mt-5">
+                                            <IncomeExpenseChart />
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
 
                             </div>
 
-
-                            <div className="  p-4 border border-[#494133] rounded-lg ">
-                                <div>
-
-                                </div>
+                            {/* Pie Chart */}
+                            <div className="border rounded-xl h-full">
+                                <DounutChart />
                             </div>
 
-                            <div className="border border-[#494133] p-4 rounded-lg">
-                                <div className="flex items-center justify-between w-full">
-
-
-                                    <div className="flex items-center gap-2">
-                                        <p className="text-white font-medium">
-                                            Income vs Expenses Overview
-                                        </p>
-
-                                        <div className="relative group">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 text-gray-500 cursor-pointer"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /> <path d="M12 9h.01" /> <path d="M11 12h1v4h1" /></svg>
-
-                                            <div className="absolute left-0 top-7 hidden group-hover:block w-80 p-2 rounded-lg border border-[#544724] bg-black shadow shadow-[#544724] z-50">
-                                                <p className="text-white text-xs">
-                                                    Displays a comparison of your income and expenses over the selected period.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="flex items-center gap-1 border border-[#d8b45c] rounded-lg px-3 py-2 cursor-pointer">
-                                        <button className="text-white text-xs">
-                                            Chart Type
-                                        </button>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 text-yellow-500" > <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M6 9l6 6l6 -6" /> </svg>
-                                    </div>
-
-                                </div>
-
-                                <div className="mt-5">
-                                    <IncomeExpenseChart />
-
-                                </div>
-
-
-
-                            </div>
                         </div>
 
 
@@ -995,13 +1275,319 @@ function Dashboard() {
 
 
 
+
                     </div>
+
+                    <div className="mt-3 block lg:flex  border border-[#494133] w-full p-5 pr-10 rounded-lg backdrop-blur-md bg-white/5 gap-3">
+
+                        <div className="border border-[#494133] p-5 w-full rounded-lg">
+
+                            <p className="text-white text-md font-semibold">
+                                Cards
+                            </p>
+
+                            <div className="w-full mt-3">
+
+
+                                <div
+                                    ref={cardContainerRef}
+                                    onScroll={handleScroll}
+                                    className=" flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none"
+                                >
+
+                                    {cardInfo.map((card, index) => (
+
+                                        <div
+                                            key={index}
+                                            className="w-full shrink-0 snap-center flex justify-center px-2 py-3"
+                                        >
+
+
+                                            <div className="relative w-full max-w-105">
+
+
+                                                <img
+                                                    src={card.img}
+                                                    alt={`NBI Card ${index + 1}`}
+                                                    className=" block w-full h-auto object-contain drop-shadow-[0_15px_20px_rgba(0,0,0,0.6)]"
+                                                />
+
+
+
+                                                <div
+                                                    className=" absolute left-[11%] top-[51%] "
+                                                    style={{
+                                                        color: card.textColor
+                                                    }}
+                                                >
+
+
+                                                    <p
+                                                        className=" text-[clamp(11px,2.7vw,18px)] tracking-[0.12em] font-medium whitespace-nowrap"
+                                                    >
+                                                        {card.CardNumber}
+                                                    </p>
+
+
+
+                                                    <p
+                                                        className=" mt-[2%] text-[clamp(8px,2vw,13px)] tracking-[0.16em] font-semibold uppercase whitespace-nowrap"
+                                                    >
+                                                        {card.CardName}
+                                                    </p>
+
+
+
+                                                    <div
+                                                        className=" flex items-center gap-[clamp(12px,4vw,28px)] mt-[2%] text-[clamp(7px,1.6vw,10px)]"
+                                                    >
+
+                                                        <div>
+                                                            <p className="font-semibold text-[0.75em]" style={{ color: card.mutedColor }}>
+                                                                VALID THRU
+                                                            </p>
+
+                                                            <p className="font-medium">
+                                                                {card.ValidThru}
+                                                            </p>
+                                                        </div>
+
+
+                                                        <div>
+                                                            <p className="font-semibold text-[0.75em]" style={{ color: card.mutedColor }}>
+                                                                CVV
+                                                            </p>
+
+                                                            <p className="font-medium tracking-wider">
+                                                                {card.CVV}
+                                                            </p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    ))}
+
+                                </div>
+
+
+                                {/* DOTS */}
+                                <div className="flex items-center justify-center gap-2 mt-0">
+
+                                    {cardInfo.map((_, index) => (
+
+                                        <button
+                                            key={index}
+                                            onClick={() => goToCard(index)}
+                                            className={` rounded-full cursor-pointer transition-all duration-300
+
+                                                    ${activeCard === index
+                                                    ? "w-5 h-2 bg-[#d8b45c]"
+                                                    : "w-2 h-2 bg-gray-600 hover:bg-gray-400"
+                                                }
+                                                  `}
+                                        />
+
+                                    ))}
+
+                                </div>
+                                <div className="flex p-1 mt-3 gap-5" >
+                                    <button className="border border-[#d8b45c] cursor-pointer text-white text-sm p-2 rounded-lg hover:text-black hover:bg-[#d8b45c] font-medium mr-auto w-full ">Freeze Card</button>
+                                    <button className="border border-[#d8b45c] cursor-pointer text-white text-sm p-2 rounded-lg hover:text-black hover:bg-[#d8b45c] font-medium ml-auto w-full">Manage Card</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div className="border border-[#494133] p-5 w-full rounded-lg ">
+
+                            <div className="flex ">
+                                <p className="text-white text-md font-semibold">Upcoming Payments</p>
+                                <div className="ml-auto flex gap-1 align-middle items-center group hover:border-[#d8b55c8b] border border-[#d8b45c] p-2 rounded-full ">
+
+                                    <p className="text-[#d8b45c] text-xs font-semibold group-hover:text-[#d8b55c8b] cursor-pointer">View All</p>
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 text-[#d8b45c] font-semibold group-hover:text-[#d8b55c8b] cursor-pointer" viewBox="0 0 24 24">
+                                        <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                            <path strokeDasharray={20} d="M3 12h17.5">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"></animate>
+                                            </path>
+                                            <path strokeDasharray={12} strokeDashoffset={12} d="M21 12l-7 7M21 12l-7 -7">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.2s" to={0}></animate>
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </div>
+
+                            </div>
+
+                            <div className="p-5 pl-0 pr-0 pb-0">
+
+                                <div className="grid grid-cols-[2fr_1fr_1fr] gap-x-5 gap-2 overflow-scroll scrollbar-none h-60">
+
+                                    {/* Header */}
+                                    <p className="text-[#d8b45c] text-xs border-b border-[#494133] pb-1 text-center">
+                                        PAYMENT
+                                    </p>
+
+                                    <p className="text-[#d8b45c] text-xs text-center border-b border-[#494133] pb-1 ">
+                                        DUE DATE
+                                    </p>
+
+                                    <p className="text-[#d8b45c] text-xs text-center border-b border-[#494133] pb-1">
+                                        AMOUNT
+                                    </p>
+
+                                    {/* Row */}
+
+                                    {upcomingPaymentDetail.map((payment, index) => (
+                                        <React.Fragment key={payment.id} >
+                                            <div className="flex items-center gap-3 mt-3 cursor-pointer">
+                                                <img
+                                                    src={payment.img}
+                                                    className="w-5 h-5"
+                                                    alt="Netflix"
+                                                />
+
+                                                <p className="text-white text-sm font-medium">
+                                                    {payment.PaymentName}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex items-center justify-center mt-3">
+                                                <p
+                                                    className={` text-xs font-medium ${payment.Status === "Upcoming" ? "text-[#d8b45c]" : payment.Status === "Urgent" ? "text-red-500" : payment.Status === "Scheduled" ? "text-gray-400" : "text-white"}`}>{payment.DueDate}</p>
+                                            </div>
+
+                                            <div className="flex items-center justify-center mt-3">
+                                                <p className="text-white text-sm font-semibold">
+                                                    <span>₹</span> {payment.DueAmount}
+                                                </p>
+                                            </div>
+                                        </React.Fragment>
+
+                                    ))}
+
+                                </div>
+                                <div className="mt-auto pt-5 ">
+                                    <button className="w-full bg-[#d5a220] text-black font-semibold rounded-md py-2  hover:bg-[#d79a00c3] cursor-pointer">
+                                        Pay All Dues
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div className="border border-[#494133] p-5 w-full rounded-lg flex flex-col">
+
+                            <p className="text-white text-md font-semibold">
+                                Quick Transfers
+                            </p>
+
+                            <div className="flex flex-col justify-between flex-1 mt-5">
+                                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-3 overflow-y-scroll scrollbar-none max-h-45">
+
+                                    {FetchContactDetail.map((contact, index) => (
+                                        <div key={index} className="max-w-fit text-center cursor-pointer">
+                                            <img src={contact.img} className="w-15 h-15 rounded-full border-2 border-[#d8b45c] "></img>
+                                            <p className="text-[#d8b45c] mt-0.5 text-sm font-medium" >{contact.name}</p>
+                                        </div>
+                                    ))}
+
+
+                                    <div className="max-w-fit text-center cursor-pointer group" onClick={() => setShowAddContact(true)}>
+                                        <div className="w-13 h-13 rounded-full border-2 border-dashed border-[#d8b45c] flex items-center justify-center transition-all duration-300 hover:bg-[#d8b45c]/10 hover:scale-105">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-[#d8b45c]"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+
+                                        </div>
+
+                                        <p className="text-[#d8b45c] mt-2 text-sm font-medium">
+                                            Add New
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+                                <div className="mt-5">
+                                    <div className="relative w-full">
+
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="#d8b45c" d="M8 3h10l-1 2h-3.26c.48.58.84 1.26 1.05 2H18l-1 2h-2a5.56 5.56 0 0 1-4.8 4.96V14h-.7l6 7H13l-6-7v-2h2.5c1.76 0 3.22-1.3 3.46-3H7l1-2h4.66C12.1 5.82 10.9 5 9.5 5H7z" />
+                                        </svg>
+
+                                        <input type="number" placeholder="Enter Amount" className="w-full rounded-md border border-[#d8b45c] bg-transparent py-2 pl-10 pr-10 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#d8b45c]" />
+
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" onClick={() => setShowAddContact(true)} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 cursor-pointer" >
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path fill="#d8b45c" d="M9.175 10.825Q8 9.65 8 8t1.175-2.825T12 4t2.825 1.175T16 8t-1.175 2.825T12 12t-2.825-1.175M4 18v-.8q0-.85.438-1.562T5.6 14.55q1.55-.775 3.15-1.162T12 13t3.25.388t3.15 1.162q.725.375 1.163 1.088T20 17.2v.8q0 .825-.587 1.413T18 20H6q-.825 0-1.412-.587T4 18" />
+                                        </svg>
+
+                                    </div>
+
+                                    <div className="mt-2 ">
+                                        <button className="w-full bg-[#d5a220] text-black font-semibold rounded-md py-2 pl-10 pr-10 text-sm cursor-pointer hover:bg-[#d79a00c3] ">Transfer Now</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+                    </div>
+
+
                 </main>
 
 
-            </div>
+            </div >
 
-        </div>
+        </div >
     );
 }
 

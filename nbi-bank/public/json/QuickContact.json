@@ -1,0 +1,16 @@
+{
+    "QuickContact": [
+        {
+            "img": "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA",
+            "name": "Jack"
+        },
+        {
+            "img": "https://fastly.picsum.photos/id/27/3264/1836.jpg?hmac=p3BVIgKKQpHhfGRRCbsi2MCAzw8mWBCayBsKxxtWO8g",
+            "name": "Marie"
+        },
+        {
+            "img": "https://fastly.picsum.photos/id/43/1280/831.jpg?hmac=glK-rQ0ppFClW-lvjk9FqEWKog07XkOxJf6Xg_cU9LI",
+            "name": "Gaurav"
+        }
+    ]
+}

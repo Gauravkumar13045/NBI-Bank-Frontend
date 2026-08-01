@@ -1,0 +1,44 @@
+{
+    "Payments": [
+        {
+            "id": 1,
+            "img": "https://api.iconify.design/simple-icons/netflix.svg?color=%23E50914",
+            "PaymentName": "Netflix Premium",
+            "DueDate": "03 Aug 2026",
+            "DueAmount": "649",
+            "Status": "Urgent"
+        },
+        {
+            "id": 2,
+            "img": "https://api.iconify.design/simple-icons/spotify.svg?color=%231DB954",
+            "PaymentName": "Spotify Premium",
+            "DueDate": "05 Aug 2026",
+            "DueAmount": "119",
+            "Status": "Upcoming"
+        },
+        {
+            "id": 3,
+            "img": "https://api.iconify.design/material-symbols/wifi-rounded.svg?color=%23D8B45C",
+            "PaymentName": "Broadband Bill",
+            "DueDate": "08 Sept 2026",
+            "DueAmount": "999",
+            "Status": "Urgent"
+        },
+        {
+            "id": 4,
+            "img": "https://api.iconify.design/material-symbols/credit-card-rounded.svg?color=%23D8B45C",
+            "PaymentName": "Credit Card EMI",
+            "DueDate": "12 Aug 2026",
+            "DueAmount": "8,750",
+            "Status": "Upcoming"
+        },
+        {
+            "id": 5,
+            "img": "https://api.iconify.design/material-symbols/health-and-safety-rounded.svg?color=%23D8B45C",
+            "PaymentName": "Health Insurance",
+            "DueDate": "18 Aug 2026",
+            "DueAmount": "3,200",
+            "Status": "Scheduled"
+        }
+    ]
+}
