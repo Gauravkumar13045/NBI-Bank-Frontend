@@ -171,10 +171,12 @@ function Dashboard() {
 
 
 
+
+
     return (
 
         <div className="h-screen bg-black flex">
-            {/* Dialog Box for the Quick Transfer */}
+
             {showAddContact && (
                 <div className=" w-full bg-black/60  absolute min-h-screen z-9999  flex items-center justify-center p-4  font-sans text-white">
 
