@@ -1,5 +1,37 @@
 @import "tailwindcss";
 
+@keyframes moveArrow {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes liveBlink {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0px #33D17A;
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(1.3);
+        box-shadow: 0 0 10px #33D17A;
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0px #33D17A;
+    }
+}
+
+.animate-live {
+    animation: liveBlink 1.2s ease-in-out infinite;
+}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

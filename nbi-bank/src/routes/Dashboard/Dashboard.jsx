@@ -158,6 +158,129 @@ function Dashboard() {
     }, []);
 
 
+    const currencies = ["USD", "EUR", "GBP", "JPY", "CNY"];
+    const countryMap = { USD: "us", EUR: "eu", GBP: "gb", JPY: "jp", CNY: "cn", };
+    const [rateInfo, setRateInfo] = useState({});
+    const [lastUpdated, setLastUpdated] = useState(new Date());
+
+    const currencyRate = async () => {
+        try {
+            const result = {};
+            await Promise.all(
+                currencies.map(async (currency) => {
+                    const Ratefetcher = await fetch(`https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=INR`);
+                    const RateDisplayer = await Ratefetcher.json();
+                    result[currency] = RateDisplayer.rates.INR;
+
+
+                })
+            );
+
+            setRateInfo(result);
+            setLastUpdated(new Date());
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        currencyRate();
+        const interval = setInterval(() => {
+            currencyRate();
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // const [marketWatch, setMarketWatch] = useState([]);
+
+    // useEffect(() => {
+    //     async function marketInfoFetcher() {
+    //         const InfoMarketFetcher = await fetch("/json/marketWatch.json");
+    //         const FetchResponce = await InfoMarketFetcher.json();
+    //         setMarketWatch(FetchResponce.MarketInfo);
+
+    //     }
+    //     marketInfoFetcher();
+    // }, []);
+
+    const [marketWatch, setMarketWatch] = useState([]);
+
+    const markets = [
+        { symbol: "^BSESN" },
+        { symbol: "^NSEI" },
+        { symbol: "^NSEBANK" },
+        { symbol: "GC=F" }
+
+    ];
+    const [lastUpdatedtime, setLastUpdatedtime] = useState(null);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+
+    useEffect(() => {
+
+        async function fetchMarketData(symbol) {
+            try {
+                const response = await fetch(
+                    `https://finansium.ai.studio/api/market-data?symbol=${encodeURIComponent(symbol)}`,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                return result.data;
+
+            } catch (error) {
+                console.error(`Failed to fetch ${symbol}:`, error);
+                return null;
+            }
+        }
+
+
+        async function marketInfoFetcher() {
+
+            const results = await Promise.all(
+                markets.map(market => fetchMarketData(market.symbol))
+            );
+
+            console.log(results);
+
+            setMarketWatch(results.filter(Boolean));
+            setLastUpdatedtime(new Date());
+        }
+
+        marketInfoFetcher();
+
+        const interval = setInterval(() => {
+            marketInfoFetcher();
+        }, 5 * 60 * 1000);
+
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000);
+
+        return () => {
+            clearInterval(interval);
+            clearInterval(timer);
+        };
+
+    }, []);
+
+    const now = new Date();
+
+    const currentMinutes =
+        now.getHours() * 60 + now.getMinutes();
+
+    const marketOpen =
+        currentMinutes >= (9 * 60 + 30) &&
+        currentMinutes <= (15 * 60 + 30);
 
 
 
@@ -1582,6 +1705,377 @@ function Dashboard() {
 
 
                     </div>
+                    <div className="mt-3    border border-[#494133] w-full p-5 pr-10 rounded-lg backdrop-blur-md bg-white/5 gap-3 grid grid-cols-1 lg:grid-cols-[60%_40%]">
+                        <div className="border border-[#494133] rounded-lg p-5 bg-[#0b0b0b]">
+
+                            {/* HEADER */}
+                            <div className="flex items-center justify-between">
+
+                                <div className="flex gap-3 items-center align-middle">
+                                    <p className="text-[#d8b45c] text-md font-semibold tracking-wide">
+                                        MARKET WATCH
+                                    </p>
+                                    {marketOpen ? (
+                                        <p className="text-black text-xs  p-2 pl-2.5 pr-2.5  rounded-full font-bold bg-green-600">
+                                            OPEN
+                                        </p>
+                                    ) : (
+                                        <p className="text-black text-xs  p-2 pl-2.5 pr-2.5 rounded-full font-bold bg-red-600">
+                                            CLOSED
+                                        </p>
+                                    )}
+
+                                </div>
+
+                                <div className="flex items-center gap-2 cursor-pointer group">
+                                    <p className="text-[#d8b45c] text-sm group-hover:text-[#b99745] transition-colors">
+                                        View All
+                                    </p>
+
+                                    <span className="text-[#d8b45c] text-lg group-hover:translate-x-1 transition-transform">
+                                        →
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            {/* COLUMN HEADERS */}
+                            <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-4 mt-5 pb-2 border-b border-[#252525]">
+
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide">
+                                    Market
+                                </p>
+
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center">
+                                    Value
+                                </p>
+
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center">
+                                    Change
+                                </p>
+
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center">
+                                    Trend
+                                </p>
+
+                            </div>
+
+
+                            {/* SENSEX */}
+                            {marketWatch.map((market) => (
+
+
+                                <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-4 items-center py-4 border-b border-[#252525]" >
+
+
+                                    {/* Market */}
+                                    <div className="flex items-center gap-3">
+
+                                        <div className="w-8.5 h-8.5 rounded-lg flex items-center justify-center">
+                                            <img
+                                                src={
+                                                    market.name === "S&P BSE SENSEX"
+                                                        ? "/stockLogo/bse.png"
+                                                        : market.name === "NIFTY 50"
+                                                            ? "/stockLogo/nifty.png"
+                                                            : market.name === "NIFTY BANK"
+                                                                ? "/stockLogo/bankNifty.png"
+                                                                : market.name === "Gold Dec 26"
+                                                                    ? "/stockLogo/gold.png"
+                                                                    : "/stockLogo/default.png"
+                                                }
+                                                alt={market.name}
+                                                className="object-contain"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <p className="text-white text-sm font-semibold">
+                                                {market.name}
+                                            </p>
+
+                                            <p className="text-gray-500 text-[10px] mt-0.5">
+                                                {market.exchange}
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+
+                                    {/* Value */}
+                                    <p className="text-white text-sm font-semibold text-center">
+                                        <span>{market.currency} </span>{market.price.toLocaleString("en-IN")}
+                                    </p>
+
+
+                                    {/* Change */}
+                                    {market.pChange >= 0 ? (
+                                        <div className="flex items-center justify-center gap-1 ">
+
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="w-4 h-4"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    fill="#49CC52"
+                                                    d="M13 20h-2V8l-5.5 5.5l-1.42-1.42L12 4.16l7.92 7.92l-1.42 1.42L13 8z"
+                                                />
+                                            </svg>
+
+                                            <p
+                                                className="text-sm font-semibold text-[#49CC52]"
+
+                                            >
+                                                {market.pChange}%
+                                            </p>
+
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center gap-1 ">
+
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="w-4 h-4 rotate-180"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    fill="#F92F34"
+                                                    d="M13 20h-2V8l-5.5 5.5l-1.42-1.42L12 4.16l7.92 7.92l-1.42 1.42L13 8z"
+                                                />
+                                            </svg>
+
+                                            <p
+                                                className="text-sm font-semibold text-[#F92F34]"
+
+                                            >
+                                                {Math.abs(market.pChange)}%
+                                            </p>
+
+                                        </div>
+                                    )}
+
+
+
+                                    {/* Chart */}
+                                    <div className="h-10 w-full">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <AreaChart
+                                                data={market.sparkline}
+                                                margin={{
+                                                    top: 4,
+                                                    right: 0,
+                                                    left: 0,
+                                                    bottom: 0
+                                                }}
+                                            >
+                                                <defs>
+                                                    <linearGradient id={`gradient-${market.symbol}`} x1="0" y1="0" x2="0" y2="1" >
+                                                        <stop
+                                                            offset="0%"
+                                                            stopColor={market.pChange >= 0 ? "#49CC52" : "#F92F34"}
+                                                            stopOpacity={0.6}
+                                                        />
+
+                                                        <stop
+                                                            offset="100%"
+                                                            stopColor={market.pChange >= 0 ? "#49CC52" : "#F92F34"}
+                                                            stopOpacity={0}
+                                                        />
+                                                    </linearGradient>
+                                                </defs>
+
+                                                <Tooltip
+                                                    formatter={(value) => [
+                                                        `${Number(value).toLocaleString()}`,
+                                                        "Price"
+                                                    ]}
+                                                    labelFormatter={(label) => `Time: ${label}`}
+                                                    contentStyle={{
+                                                        backgroundColor: "#111111",
+                                                        border: "1px solid #494133",
+                                                        borderRadius: "8px",
+                                                        color: "#fff"
+                                                    }}
+                                                    labelStyle={{
+                                                        color: "#999"
+                                                    }}
+                                                    itemStyle={{
+                                                        color: market.pChange >= 0 ? "#49CC52" : "#F92F34"
+                                                    }}
+                                                />
+
+                                                <Area
+                                                    type="monotone"
+                                                    dataKey="price"
+                                                    stroke={market.pChange >= 0 ? "#49CC52" : "#F92F34"}
+                                                    strokeWidth={1.5}
+                                                    fill={`url(#gradient-${market.symbol})`}
+                                                    dot={false}
+                                                    activeDot={{
+                                                        r: 4,
+                                                        fill: market.pChange >= 0 ? "#49CC52" : "#F92F34",
+                                                        stroke: "#111",
+                                                        strokeWidth: 2
+                                                    }}
+                                                />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+
+
+
+
+
+
+
+                                </div>
+                            ))}
+
+
+                            {/* FOOTER */}
+                            <div className="flex items-center justify-between mt-2 pt-3 ">
+
+                                <div className="flex items-center gap-2">
+
+                                    <span className="w-2 h-2 rounded-full bg-[#33D17A] animate-live "></span>
+
+
+                                    <p className="text-gray-500 text-xs">
+                                        Market data  {" "}
+                                        {lastUpdatedtime
+                                            ? (() => {
+                                                const minutes = Math.floor(
+                                                    (currentTime.getTime() - lastUpdatedtime.getTime()) / 60000
+                                                );
+
+                                                return minutes === 0
+                                                    ? "just now"
+                                                    : `${minutes} min ago`;
+                                            })()
+                                            : "loading..."
+                                        }
+                                    </p>
+
+                                </div>
+
+                                <p className="text-[#d8b45c] text-xs">
+                                    NSE • BSE
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div className="border border-[#494133]  p-5 w-full rounded-lg ">
+                            <div>
+                                <div className="flex ">
+                                    <p className="text-[#d8b45c] font-semibold ">EXCHANGE RATES</p>
+                                    <div className="flex gap-1 ml-auto items-center align-middle cursor-pointer " >
+                                        <p className="text-[#d8b45c] text-sm ">View All</p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 text-[#d8b45c] font-semibold group-hover:text-[#d8b55c8b] cursor-pointer " viewBox="0 0 24 24" style={{ animation: "moveArrow 1s ease-in-out infinite" }}>
+                                            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                                <path strokeDasharray={20} d="M3 12h17.5">
+                                                    <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"></animate>
+                                                </path>
+                                                <path strokeDasharray={12} strokeDashoffset={12} d="M21 12l-7 7M21 12l-7 -7">
+                                                    <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.2s" to={0}></animate>
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-5 gap-2  mt-2 pt-2">
+                                <p className="text-gray-400 text-sm text-center border-b border-gray-400  pb-1">CURRENCY</p>
+                                <p className="text-gray-400 text-sm text-center border-b border-gray-400 pb-1">RATE</p>
+                                <p className="text-gray-400 text-sm text-center border-b border-gray-400 pb-1">CHANGE</p>
+
+
+                                {Object.entries(rateInfo).map(([currency, rate]) => (
+                                    <React.Fragment key={currency}>
+
+                                        <div className="flex items-center gap-3 mt-1 justify-center">
+                                            <img src={`https://flagcdn.com/${countryMap[currency]}.svg`} className="w-9 h-9 rounded-full object-contain" alt={currency} />
+                                            <p className="text-white text-sm font-semibold">{currency}</p>
+                                        </div>
+
+
+                                        <div className="flex items-center justify-center mt-1">
+                                            <p className="text-white">{rate.toFixed(2)}</p>
+                                        </div>
+
+
+                                        <div className="flex items-center justify-center gap-1 mt-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"> <path fill="#49cc52" d="M13 20h-2V8l-5.5 5.5l-1.42-1.42L12 4.16l7.92 7.92l-1.42 1.42L13 8z"></path> </svg>
+
+                                            {/* <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"> <path fill="#f92f34" d="M13 20h-2V8l-5.5 5.5l-1.42-1.42L12 4.16l7.92 7.92l-1.42 1.42L13 8z"></path> </svg> */}
+
+                                            <p className="text-[#49CC52] text-sm font-semibold">0.12 <span>%</span></p>
+                                        </div>
+                                        <div className="col-span-3 h-px bg-[#252525] mt-1"></div>
+
+
+
+
+
+                                    </React.Fragment>
+
+
+
+                                ))}
+
+
+                                <div className="col-span-3 flex items-center justify-between mt-1 ">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-[#33D17A] animate-live "></span>
+
+                                        <p className="text-gray-500 text-xs">
+                                            Updated {lastUpdated.toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
+                                        </p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" onClick={currencyRate} className="w-4 text-gray-500 cursor-pointer" viewBox="0 0 24 24">
+                                            <path fill="#6a7282" d="M17.65 6.35A7.96 7.96 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"></path>
+                                        </svg>
+
+                                    </div>
+
+                                    <p className="text-[#d8b45c] text-xs font-medium">
+                                        All rates are live
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            {/* <div>
+                                <div>
+
+                                </div>
+                                <div>
+
+                                </div>
+
+                            </div> */}
+
+
+
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+
 
 
                 </main>
