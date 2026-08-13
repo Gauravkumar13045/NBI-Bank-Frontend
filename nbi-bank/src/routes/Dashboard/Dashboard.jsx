@@ -285,6 +285,22 @@ function Dashboard() {
 
 
 
+    const [FinanceNews, setFinanceNews] = useState([]);
+
+    useEffect(() => {
+        async function NewsFetcher() {
+            const NewsGet = await fetch(`https://api.marketaux.com/v1/news/all?countries=in&industries=Financial%20Services&filter_entities=true&language=en&limit=3&api_token=${NEWS_API_KEY}`);
+            const news = await NewsGet.json();
+            setFinanceNews(news.data);
+            NewsFetcher();
+
+            const NewsTimer = setInterval(() => {
+                NewsFetcher();
+            }, 30 * 60 * 1000);
+
+        }
+    }, [])
+
 
 
 
@@ -1720,7 +1736,7 @@ function Dashboard() {
                                             OPEN
                                         </p>
                                     ) : (
-                                        <p className="text-black text-xs  p-2 pl-2.5 pr-2.5 rounded-full font-bold bg-red-600">
+                                        <p className="text-black text-xs  p-2 pl-2.5 pr-2.5 rounded-full font-bold bg-red-700">
                                             CLOSED
                                         </p>
                                     )}
@@ -1732,9 +1748,16 @@ function Dashboard() {
                                         View All
                                     </p>
 
-                                    <span className="text-[#d8b45c] text-lg group-hover:translate-x-1 transition-transform">
-                                        →
-                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 text-[#d8b45c] font-semibold group-hover:text-[#d8b55c8b] cursor-pointer " viewBox="0 0 24 24" style={{ animation: "moveArrow 1s ease-in-out infinite" }}>
+                                        <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                            <path strokeDasharray={20} d="M3 12h17.5">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"></animate>
+                                            </path>
+                                            <path strokeDasharray={12} strokeDashoffset={12} d="M21 12l-7 7M21 12l-7 -7">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.2s" to={0}></animate>
+                                            </path>
+                                        </g>
+                                    </svg>
                                 </div>
 
                             </div>
@@ -2054,25 +2077,195 @@ function Dashboard() {
 
                             </div>
 
-                            {/* <div>
-                                <div>
-
-                                </div>
-                                <div>
-
-                                </div>
-
-                            </div> */}
-
 
 
 
                         </div>
 
 
+                    </div>
 
+
+
+                    <div className="mt-3 grid grid-cols-1 lg:grid-cols-[40%_60%] border border-[#494133] w-full p-5  rounded-lg backdrop-blur-md bg-white/5 gap-3  ">
+
+
+
+
+
+
+                        <div className="border border-[#494133] p-5 w-full rounded-lg">
+
+                        </div>
+
+
+
+
+
+
+                        {/* ----------------------------------------------------------------------------------------------- */}
+
+
+                        <section className="w-full rounded-lg border border-[#494133]   p-6 text-white">
+
+                            {/* Header */}
+                            <div className="mb-1 flex items-center justify-between">
+
+                                <div className="flex items-center gap-4">
+
+
+
+                                    <div>
+                                        <p className=" font-semibold   text-[#D8B45C]">
+                                            FINANCIAL NEWS
+                                        </p>
+
+                                        <p className="mt-0.5 text-xs text-gray-500">
+                                            Latest updates from the world of finance
+                                        </p>
+                                    </div>
+
+                                </div>
+
+
+                                {/* View All */}
+                                <button
+                                    className=" hidden sm:flex items-center gap-3 rounded-lg  text-sm font-semibold text-[#D8B45C] transition  hover:bg-[#D8B45C]/10"
+                                >
+                                    View All
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 text-[#d8b45c] font-semibold group-hover:text-[#d8b55c8b] cursor-pointer " viewBox="0 0 24 24" style={{ animation: "moveArrow 1s ease-in-out infinite" }}>
+                                        <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                            <path strokeDasharray={20} d="M3 12h17.5">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"></animate>
+                                            </path>
+                                            <path strokeDasharray={12} strokeDashoffset={12} d="M21 12l-7 7M21 12l-7 -7">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.2s" to={0}></animate>
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </button>
+
+                            </div>
+
+
+                            {/* News List */}
+                            <div className="overflow-hidden rounded-2xl  ">
+
+                                {news.map((article, index) => (
+
+                                    <a href={article.url} key={article.id} className={` group flex gap-5 p-4 sm:p-5 transition hover:bg-[#0e100f] ${index !== news.length - 1 ? "border-b border-[#202222]" : ""} `}
+                                    >
+
+                                        {/* Image */}
+                                        <div className="h-28 w-36 shrink-0 overflow-hidden rounded-xl border border-[#272727] bg-[#111] sm:h-32 sm:w-56">
+
+                                            <img
+                                                src={article.image}
+                                                alt={article.title}
+                                                className=" h-full w-full object-cover transition duration-300 group-hover:scale-105 "
+                                            />
+
+                                        </div>
+
+
+                                        {/* Content */}
+                                        <div className="min-w-0 flex-1">
+
+                                            <div className="flex items-start justify-between gap-4">
+
+                                                <p className=" line-clamp-1 text-[15px] font-medium leading-6  text-white sm:text-[15px] ">
+                                                    {article.title}
+                                                </p>
+
+                                                {/* Arrow */}
+                                                <span className=" hidden text-2xl  text-gray-500 transition group-hover:translate-x-1 group-hover:text-[#D8B45C] sm:block">
+                                                    ›
+                                                </span>
+
+                                            </div>
+
+
+                                            {/* Description */}
+                                            <p className="  hidden max-w-3xl line-clamp-2 text-sm leading-5.5  text-gray-400 sm:block">
+                                                {article.description}
+                                            </p>
+
+
+                                            {/* Meta */}
+                                            <div className=" mt-3 flex flex-wrap items-center gap-3 text-xs  text-gray-500 ">
+
+                                                {/* Calendar */}
+                                                <span className="flex items-center gap-1.5">
+
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"> <rect x="3" y="4" width="18" height="18" rx="2" /> <line x1="16" y1="2" x2="16" y2="6" /> <line x1="8" y1="2" x2="8" y2="6" /> <line x1="3" y1="10" x2="21" y2="10" /> </svg>
+
+                                                    {article.date}
+
+                                                </span>
+
+
+                                                <span className="text-[#555]">
+                                                    |
+                                                </span>
+
+
+                                                <span className="font-medium text-[#D8B45C]">
+                                                    {article.source}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </a>
+
+                                ))}
+
+                            </div>
+
+
+                            {/* Footer */}
+                            <div className="mt-2 flex items-center justify-between">
+
+                                <button
+                                    className=" flex items-center gap-2 text-sm font-semibold text-[#D8B45C] transition hover:text-[#f0cf72] cursor-pointer"
+                                >
+                                    Read More News
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 text-[#d8b45c] font-semibold group-hover:text-[#d8b55c8b] cursor-pointer " viewBox="0 0 24 24" >
+                                        <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                                            <path strokeDasharray={20} d="M3 12h17.5">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"></animate>
+                                            </path>
+                                            <path strokeDasharray={12} strokeDashoffset={12} d="M21 12l-7 7M21 12l-7 -7">
+                                                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.2s" to={0}></animate>
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </button>
+
+
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+
+                                    <span className="w-2 h-2 rounded-full bg-[#33D17A] animate-live "></span>
+
+                                    Last updated: Just now
+
+                                </div>
+
+                            </div>
+
+                        </section>
 
                     </div>
+                    {/* ----------------------------------------------------------------------------------------------- */}
+
+
+
+
+
+
 
 
 
