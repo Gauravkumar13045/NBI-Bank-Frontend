@@ -17,7 +17,7 @@ import DounutChart from "../../components/dounutChart"
 import BlackCard from "../../images/cards/blackcard.png";
 import GoldenCard from "../../images/cards/goldencard.png";
 import SilverCard from "../../images/cards/silvercard.png";
-
+const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
 
 
@@ -193,17 +193,9 @@ function Dashboard() {
         return () => clearInterval(interval);
     }, []);
 
-    // const [marketWatch, setMarketWatch] = useState([]);
 
-    // useEffect(() => {
-    //     async function marketInfoFetcher() {
-    //         const InfoMarketFetcher = await fetch("/json/marketWatch.json");
-    //         const FetchResponce = await InfoMarketFetcher.json();
-    //         setMarketWatch(FetchResponce.MarketInfo);
 
-    //     }
-    //     marketInfoFetcher();
-    // }, []);
+
 
     const [marketWatch, setMarketWatch] = useState([]);
 
@@ -221,9 +213,9 @@ function Dashboard() {
     useEffect(() => {
 
         async function fetchMarketData(symbol) {
+
             try {
-                const response = await fetch(
-                    `https://finansium.ai.studio/api/market-data?symbol=${encodeURIComponent(symbol)}`,
+                const response = await fetch(`https://finansium.ai.studio/api/market-data?symbol=${encodeURIComponent(symbol)}`,
                     {
                         cache: "no-store"
                     }
@@ -234,7 +226,6 @@ function Dashboard() {
                 }
 
                 const result = await response.json();
-
                 return result.data;
 
             } catch (error) {
@@ -275,32 +266,121 @@ function Dashboard() {
 
     const now = new Date();
 
-    const currentMinutes =
-        now.getHours() * 60 + now.getMinutes();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-    const marketOpen =
-        currentMinutes >= (9 * 60 + 30) &&
-        currentMinutes <= (15 * 60 + 30);
+    const marketOpen = currentMinutes >= (9 * 60 + 30) && currentMinutes <= (15 * 60 + 30);
 
+
+
+
+
+    function getTimeAgo(fetchedAt, currentTime) {
+        if (!fetchedAt) return "—";
+
+        const diffMs = currentTime - fetchedAt;
+        const diffMin = Math.floor(diffMs / 60000);
+
+        if (diffMin < 1) return "Just now";
+        if (diffMin === 1) return "1 min ago";
+        if (diffMin < 60) return `${diffMin} min ago`;
+
+        const diffHr = Math.floor(diffMin / 60);
+        if (diffHr === 1) return "1 hr ago";
+        return `${diffHr} hr ago`;
+    }
 
 
 
     const [FinanceNews, setFinanceNews] = useState([]);
+    const [currentTimeNews, setCurrentTimeNews] = useState(new Date());
+    const [lastFetchedAt, setLastFetchedAt] = useState(null);
+
 
     useEffect(() => {
-        async function NewsFetcher() {
-            const NewsGet = await fetch(`https://api.marketaux.com/v1/news/all?countries=in&industries=Financial%20Services&filter_entities=true&language=en&limit=3&api_token=${NEWS_API_KEY}`);
-            const news = await NewsGet.json();
-            setFinanceNews(news.data);
-            NewsFetcher();
+        async function NewsFetcher(force = false) {
+            console.log("🔥 NEWS FETCH CHECK:", new Date().toLocaleTimeString());
 
-            const NewsTimer = setInterval(() => {
-                NewsFetcher();
-            }, 30 * 60 * 1000);
+            const savedNews = localStorage.getItem("financeNews");
 
+            if (!force && savedNews) {
+                const parsedNews = JSON.parse(savedNews);
+                const age = Date.now() - parsedNews.fetchedAt;
+
+                if (age < 30 * 60 * 1000) {
+                    console.log("⏭️ Using cache, skipping API call");
+                    setFinanceNews(parsedNews.data);
+                    setLastFetchedAt(parsedNews.fetchedAt);
+                    return;
+                }
+            }
+
+            try {
+                const NewsGet = await fetch(
+                    `https://api.marketaux.com/v1/news/all?countries=in&industries=Financial%20Services&filter_entities=true&language=en&limit=3&api_token=${NEWS_API_KEY}`
+                );
+
+                if (!NewsGet.ok) {
+                    throw new Error(`HTTP Error: ${NewsGet.status}`);
+                }
+
+                const news = await NewsGet.json();
+                setFinanceNews(news.data);
+                const now = Date.now();
+                setLastFetchedAt(now);
+
+                localStorage.setItem(
+                    "financeNews",
+                    JSON.stringify({
+                        data: news.data,
+                        fetchedAt: Date.now()
+                    })
+                );
+                console.log("✅ NEWS FETCH SUCCESS:", new Date().toLocaleTimeString());
+
+            } catch (error) {
+                console.error(`Failed to fetch:`, error);
+            }
         }
-    }, [])
 
+
+        NewsFetcher();
+
+
+
+        const NewsTimer = setInterval(() => {
+            NewsFetcher();
+        }, 30 * 60 * 1000);
+
+        const timer = setInterval(() => {
+            setCurrentTimeNews(new Date());
+        }, 60000);
+
+        return () => {
+            clearInterval(NewsTimer);
+            clearInterval(timer);
+        };
+    }, []);
+
+
+
+
+    const [CreditScore, setCreditScore] = useState(782);
+    const [ScoreChange, setScoreChange] = useState(24);
+    const [ScoreUpdatedDaysAgo, setScoreUpdatedDaysAgo] = useState(2);
+
+    const ScoreFactors = [
+        { label: "Payment History", value: 92 },
+        { label: "Credit Utilization", value: 24 },
+        { label: "Credit Age", value: 68 },
+        { label: "Credit Mix", value: 55 },
+    ];
+
+    function getScoreLabel(score) {
+        if (score >= 750) return "Excellent";
+        if (score >= 700) return "Good";
+        if (score >= 650) return "Fair";
+        return "Poor";
+    }
 
 
 
@@ -2094,7 +2174,234 @@ function Dashboard() {
 
 
 
-                        <div className="border border-[#494133] p-5 w-full rounded-lg">
+                        <div className="w-full overflow-hidden rounded-xl border border-[#494133] bg-[#0b0b0b]">
+
+                            <div className="grid grid-cols-1 md:grid-cols-1">
+
+                                {/* ================= LEFT: CREDIT SCORE ================= */}
+                                <div className="flex min-w-0 flex-col p-5 pb-0 md:border-r md:border-[#494133]">
+
+                                    {/* Header */}
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-sm font-semibold tracking-wide text-[#D8B45C]">
+                                            CREDIT SCORE
+                                        </p>
+
+                                        <button
+                                            className="group flex cursor-pointer items-center gap-1 text-xs font-semibold text-[#D8B45C] transition hover:text-[#f0cf72]"
+                                        >
+                                            View All
+
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M3 12h17" />
+                                                <path d="m14 5 7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+
+                                    {/* Gauge */}
+                                    <div className="flex flex-1 flex-col items-center justify-center py-5">
+
+                                        <div className="relative w-full max-w-57.5">
+
+                                            <svg
+                                                viewBox="0 0 200 115"
+                                                className="w-full overflow-visible"
+                                            >
+
+                                                <defs>
+                                                    <linearGradient
+                                                        id="scoreArcGradient"
+                                                        x1="0"
+                                                        y1="0"
+                                                        x2="200"
+                                                        y2="0"
+                                                        gradientUnits="userSpaceOnUse"
+                                                    >
+                                                        <stop offset="0%" stopColor="#e04b3f" />
+                                                        <stop offset="50%" stopColor="#D8B45C" />
+                                                        <stop offset="100%" stopColor="#33D17A" />
+                                                    </linearGradient>
+                                                </defs>
+
+
+                                                {/* Outer dotted arc */}
+                                                <path
+                                                    d="M 6 100 A 94 94 0 0 1 194 100"
+                                                    fill="none"
+                                                    stroke="url(#scoreArcGradient)"
+                                                    strokeWidth="2"
+                                                    strokeDasharray="1 7"
+                                                    strokeLinecap="round"
+                                                    opacity="0.55"
+                                                />
+
+
+                                                {/* Main arc */}
+                                                <path
+                                                    d="M 20 100 A 80 80 0 0 1 180 100"
+                                                    fill="none"
+                                                    stroke="url(#scoreArcGradient)"
+                                                    strokeWidth="10"
+                                                    strokeLinecap="round"
+                                                />
+
+
+                                                {/* Needle */}
+                                                <g
+                                                    style={{
+                                                        transform: `rotate(${-90 + ((CreditScore - 300) / 600) * 180
+                                                            }deg)`,
+                                                        transformOrigin: "100px 100px",
+                                                        transition: "transform 0.6s ease",
+                                                    }}
+                                                >
+                                                    <line
+                                                        x1="100"
+                                                        y1="100"
+                                                        x2="100"
+                                                        y2="34"
+                                                        stroke="#d8b45c"
+                                                        strokeWidth="2.5"
+                                                        strokeLinecap="round"
+                                                    />
+
+                                                    <circle
+                                                        cx="100"
+                                                        cy="100"
+                                                        r="5"
+                                                        fill="#d8b45c"
+                                                    />
+                                                </g>
+
+                                            </svg>
+
+
+                                            {/* Score */}
+                                            <div className=" flex flex-col items-center">
+                                                <p className="text-3xl font-bold leading-none text-white">
+                                                    {CreditScore}
+                                                </p>
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* Score label */}
+                                        <p className="mt-1 text-sm font-semibold text-[#33D17A]">
+                                            {getScoreLabel(CreditScore)}
+                                        </p>
+
+
+                                        {/* Monthly change */}
+                                        <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
+                                            <span className="text-[#33D17A]">
+                                                ↑ {ScoreChange} points
+                                            </span>
+
+                                            from last month
+                                        </p>
+
+                                    </div>
+
+
+                                    {/* Footer */}
+                                    <div className="flex items-center justify-between border-t border-[#272727] pt-3 text-xs text-gray-500">
+
+                                        <span>
+                                            Powered by{" "}
+                                            <span className="font-semibold text-[#4E8DF5]">
+                                                CIBIL
+                                            </span>
+                                        </span>
+
+                                        <span>
+                                            Updated {ScoreUpdatedDaysAgo} days ago
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                {/* ================= RIGHT: SCORE FACTORS ================= */}
+                                <div className="flex min-w-0 flex-col justify-center p-5">
+
+                                    <div className="mb-5 flex items-center justify-between">
+
+                                        <p className="text-sm font-semibold tracking-wide text-[#D8B45C]">
+                                            SCORE FACTORS
+                                        </p>
+
+                                        <span className="rounded-full border border-[#494133] px-2.5 py-1 text-[10px] text-gray-500">
+                                            4 Factors
+                                        </span>
+
+                                    </div>
+
+
+                                    <div className="space-y-5">
+
+                                        {ScoreFactors.map((factor) => (
+
+                                            <div key={factor.label}>
+
+                                                {/* Label + percentage */}
+                                                <div className="mb-2 flex items-center justify-between">
+
+                                                    <span className="text-xs text-gray-300">
+                                                        {factor.label}
+                                                    </span>
+
+                                                    <span className="text-xs font-semibold text-white">
+                                                        {factor.value}%
+                                                    </span>
+
+                                                </div>
+
+
+                                                {/* Progress */}
+                                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#272727]">
+
+                                                    <div
+                                                        className="h-full rounded-full bg-linear-to-r from-[#D8B45C] to-[#33D17A] transition-all duration-700"
+                                                        style={{
+                                                            width: `${factor.value}%`,
+                                                        }}
+                                                    />
+
+                                                </div>
+
+                                            </div>
+
+                                        ))}
+
+                                    </div>
+
+
+                                    {/* Bottom insight */}
+                                    <div className="mt-3 rounded-lg border border-[#494133]/60 bg-[#12110e] px-3 py-2.5">
+
+                                        <p className="text-[11px] text-gray-500">
+                                            Credit utilization and payment history have the
+                                            biggest impact on your score.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
@@ -2152,16 +2459,16 @@ function Dashboard() {
                             {/* News List */}
                             <div className="overflow-hidden rounded-2xl  ">
 
-                                {news.map((article, index) => (
+                                {FinanceNews.map((article, index) => (
 
-                                    <a href={article.url} key={article.id} className={` group flex gap-5 p-4 sm:p-5 transition hover:bg-[#0e100f] ${index !== news.length - 1 ? "border-b border-[#202222]" : ""} `}
+                                    <a href={article.url} key={article.uuid} target="_blank" rel="noopener noreferrer" className={` group flex gap-5 p-4 sm:p-5 transition hover:bg-[#0e100f] ${index !== FinanceNews.length - 1 ? "border-b border-[#202222]" : ""} `}
                                     >
 
                                         {/* Image */}
                                         <div className="h-28 w-36 shrink-0 overflow-hidden rounded-xl border border-[#272727] bg-[#111] sm:h-32 sm:w-56">
 
                                             <img
-                                                src={article.image}
+                                                src={article.image_url}
                                                 alt={article.title}
                                                 className=" h-full w-full object-cover transition duration-300 group-hover:scale-105 "
                                             />
@@ -2187,7 +2494,15 @@ function Dashboard() {
 
 
                                             {/* Description */}
-                                            <p className="  hidden max-w-3xl line-clamp-2 text-sm leading-5.5  text-gray-400 sm:block">
+                                            <p
+                                                className="hidden max-w-3xl text-sm leading-5 text-gray-400 sm:block"
+                                                style={{
+                                                    display: "-webkit-box",
+                                                    WebkitLineClamp: 2,
+                                                    WebkitBoxOrient: "vertical",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
                                                 {article.description}
                                             </p>
 
@@ -2200,7 +2515,12 @@ function Dashboard() {
 
                                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"> <rect x="3" y="4" width="18" height="18" rx="2" /> <line x1="16" y1="2" x2="16" y2="6" /> <line x1="8" y1="2" x2="8" y2="6" /> <line x1="3" y1="10" x2="21" y2="10" /> </svg>
 
-                                                    {article.date}
+                                                    {new Date(article.published_at).toLocaleDateString("en-IN", {
+                                                        timeZone: "Asia/Kolkata",
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    })}
 
                                                 </span>
 
@@ -2250,7 +2570,7 @@ function Dashboard() {
 
                                     <span className="w-2 h-2 rounded-full bg-[#33D17A] animate-live "></span>
 
-                                    Last updated: Just now
+                                    Last updated: {getTimeAgo(lastFetchedAt, currentTimeNews)}
 
                                 </div>
 
