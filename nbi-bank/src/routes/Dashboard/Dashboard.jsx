@@ -364,9 +364,10 @@ function Dashboard() {
 
 
 
-    const [CreditScore, setCreditScore] = useState(782);
+    const [CreditScore, setCreditScore] = useState(765);
     const [ScoreChange, setScoreChange] = useState(24);
     const [ScoreUpdatedDaysAgo, setScoreUpdatedDaysAgo] = useState(2);
+    const clampedScore = Math.min(900, Math.max(300, CreditScore));
 
     const ScoreFactors = [
         { label: "Payment History", value: 92 },
@@ -1022,7 +1023,7 @@ function Dashboard() {
                         <div className="grid grid-cols-1 xl:grid-cols-[60%_40%] p-2 gap-5  ">
                             <div className="border border-[#494133] p-3 rounded-lg  ">
                                 <div className="flex justify-between w-full items-center">
-                                    <p className="text-white font-medium text-lg">Recent Transactions</p>
+                                    <p className="text-[#d8b45c] font-medium text-lg">Recent Transactions</p>
                                     <div className="flex gap-2 group">
                                         <button className="text-[#d8b45c] font-medium text-sm group-hover:cursor-pointer group-hover:text-[#fcd36c] group-hover:scale-105 group-transition-all group-duration-300">View All</button>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right w-5 text-[#d8b45c] group-hover:cursor-pointer group-hover:text-[#fcd36c] group-hover:scale-105 group-transition-all group-duration-300" > <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 12l14 0" /> <path d="M13 18l6 -6" /> <path d="M13 6l6 6" /></svg>
@@ -1250,8 +1251,7 @@ function Dashboard() {
 
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
+                                                    viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor"
                                                     strokeWidth={2}
                                                     strokeLinecap="round"
@@ -1807,8 +1807,8 @@ function Dashboard() {
                             {/* HEADER */}
                             <div className="flex items-center justify-between">
 
-                                <div className="flex gap-3 items-center align-middle">
-                                    <p className="text-[#d8b45c] text-md font-semibold tracking-wide">
+                                <div className="flex gap-3  items-center align-middle">
+                                    <p className="text-[#d8b45c] md:text-base text-sm font-semibold tracking-wide">
                                         MARKET WATCH
                                     </p>
                                     {marketOpen ? (
@@ -1844,7 +1844,7 @@ function Dashboard() {
 
 
                             {/* COLUMN HEADERS */}
-                            <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-4 mt-5 pb-2 border-b border-[#252525]">
+                            <div className="grid md:grid-cols-[1.4fr_1fr_1fr_1.2fr] grid-cols-[1fr_1fr] gap-4 mt-5 pb-2 border-b border-[#252525]">
 
                                 <p className="text-gray-500 text-[11px] uppercase tracking-wide">
                                     Market
@@ -1854,11 +1854,11 @@ function Dashboard() {
                                     Value
                                 </p>
 
-                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center">
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center md:grid hidden">
                                     Change
                                 </p>
 
-                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center">
+                                <p className="text-gray-500 text-[11px] uppercase tracking-wide text-center md:grid hidden">
                                     Trend
                                 </p>
 
@@ -1869,7 +1869,7 @@ function Dashboard() {
                             {marketWatch.map((market) => (
 
 
-                                <div className="grid grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-4 items-center py-4 border-b border-[#252525]" >
+                                <div className="grid md:grid-cols-[1.4fr_1fr_1fr_1.2fr] grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-[#252525]" >
 
 
                                     {/* Market */}
@@ -1914,7 +1914,7 @@ function Dashboard() {
 
                                     {/* Change */}
                                     {market.pChange >= 0 ? (
-                                        <div className="flex items-center justify-center gap-1 ">
+                                        <div className=" items-center justify-center gap-1 md:flex hidden">
 
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -1936,7 +1936,7 @@ function Dashboard() {
 
                                         </div>
                                     ) : (
-                                        <div className="flex items-center justify-center gap-1 ">
+                                        <div className=" items-center justify-center gap-1 md:flex hidden">
 
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -1962,7 +1962,7 @@ function Dashboard() {
 
 
                                     {/* Chart */}
-                                    <div className="h-10 w-full">
+                                    <div className="h-10 w-full md:flex hidden">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <AreaChart
                                                 data={market.sparkline}
@@ -2260,8 +2260,7 @@ function Dashboard() {
                                                 {/* Needle */}
                                                 <g
                                                     style={{
-                                                        transform: `rotate(${-90 + ((CreditScore - 300) / 600) * 180
-                                                            }deg)`,
+                                                        transform: `rotate(${-90 + ((clampedScore - 300) / 600) * 180}deg)`,
                                                         transformOrigin: "100px 100px",
                                                         transition: "transform 0.6s ease",
                                                     }}
@@ -2279,7 +2278,7 @@ function Dashboard() {
                                                     <circle
                                                         cx="100"
                                                         cy="100"
-                                                        r="5"
+                                                        r="4"
                                                         fill="#d8b45c"
                                                     />
                                                 </g>
