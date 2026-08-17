@@ -51,10 +51,10 @@ const CustomDot = (props) => {
         <circle
             cx={cx}
             cy={cy}
-            r={4}
+            r={window.innerWidth < 640 ? 2.5 : 4}
             fill={stroke}
             stroke={stroke}
-            strokeWidth={2}
+            strokeWidth={window.innerWidth < 640 ? 1 : 2}
         />
     );
 };
@@ -70,7 +70,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                 boxShadow: "0 0 20px rgba(216,180,92,0.15)"
             }}>
                 <p style={{ color: "#ffffff", fontSize: "13px", fontWeight: 600, marginBottom: "8px" }}>
-                    {label} May 2025
+                    {label} May 2025``
                 </p>
                 {payload.map((entry, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
@@ -117,7 +117,7 @@ export default function IncomeExpenseChart() {
             <ResponsiveContainer width="100%" height={320}>
                 <AreaChart
                     data={chartData}
-                    margin={{ top: 15, right: 10, left: 10, bottom: 0 }}
+                    margin={{ top: 15, right: 0, left: 0, bottom: 0 }}
                 >
                     <defs>
                         <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
@@ -149,7 +149,8 @@ export default function IncomeExpenseChart() {
                         axisLine={false}
                         tickLine={false}
                         tickFormatter={(v) => `${v / 1000000}M`}
-                        ticks={[0, 5000000, 10000000, 15000000, 20000000]}
+                        domain={[0, 21000000]}
+                        ticks={[0, 5000000, 10000000, 15000000, 20000000, 21000000]}
                     />
 
                     <Tooltip

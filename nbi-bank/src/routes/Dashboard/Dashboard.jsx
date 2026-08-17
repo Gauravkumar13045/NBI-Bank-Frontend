@@ -805,7 +805,8 @@ function Dashboard() {
                 <main className="flex-1 overflow-y-auto p-5 scrollbar-none">
                     <div className="mt-3 border border-[#494133] w-full p-5 rounded-lg backdrop-blur-md bg-white/5 md:text-left text-center">
                         <p className="text-[#d8b45c] text-xs font-semibold">ACCOUNTS OVERVIEW </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4  gap-5 p-5">
+
+                        <div className="sm:grid flex w-full  md:grid-cols-2 xl:grid-cols-4  gap-5 p-5">
                             {/* <div className="md:grid flex flex-cols-1 md:grid-cols-2 md:xl:grid-cols-4 md:gap-5 md:p-5 h-25 md:h-max md:overflow-none"> */}
 
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
@@ -1019,7 +1020,7 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-3 border border-[#494133] w-full p-5 pr-10 rounded-lg backdrop-blur-md bg-white/5">
+                    <div className="mt-3 border border-[#494133] w-full p-5 md:pr-10 rounded-lg backdrop-blur-md bg-white/5">
                         <div className="grid grid-cols-1 xl:grid-cols-[60%_40%] p-2 gap-5  ">
                             <div className="border border-[#494133] p-3 rounded-lg  ">
                                 <div className="flex justify-between w-full items-center">
@@ -1129,7 +1130,7 @@ function Dashboard() {
                                     QUICK ACTIONS
                                 </h2>
 
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 ">
+                                <div className="sm:grid flex flex-row  sm:overflow-visible overflow-x-auto  sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 ">
 
                                     {[
                                         {
@@ -1211,13 +1212,13 @@ function Dashboard() {
                                     ].map((item, index) => (
                                         <div
                                             key={index}
-                                            className="border border-[#494133] rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#d8b45c] hover:bg-[#d8b45c]/5 transition-all duration-300 hover:scale-105"
+                                            className="border border-[#494133] rounded-xl p-4 flex flex-col  items-center justify-center gap-2 cursor-pointer hover:border-[#d8b45c] hover:bg-[#d8b45c]/5 transition-all duration-300 hover:scale-105"
                                         >
                                             <div className="text-[#d8b45c]">
                                                 {item.icon}
                                             </div>
 
-                                            <p className="text-white text-xs text-center leading-tight">
+                                            <p className="text-white sm:mt-0 mt-0.5 text-xs text-center sm:text-wrap text-nowrap leading-tight ">
                                                 {item.title}
                                             </p>
                                         </div>
@@ -1228,7 +1229,7 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="mt-3 grid grid-col-2 border border-[#494133] w-full p-5 pr-10 rounded-lg backdrop-blur-md bg-white/5 gap-2">
+                    <div className="mt-3 grid grid-col-2 border border-[#494133] w-full p-5 md:pr-10 rounded-lg backdrop-blur-md bg-white/5 gap-2">
 
                         <p className="text-[#d8b45c] font-semibold ">Transaction Analytics</p>
 
@@ -1240,7 +1241,7 @@ function Dashboard() {
                             <div className="flex flex-col gap-5">
 
                                 {/* Cards */}
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className="grid-cols-1  sm:grid sm:grid-cols-3 gap-y-2 md:gap-4">
 
                                     <div className="border border-[#494133] rounded-lg p-3">
                                         <div className="flex gap-3">
