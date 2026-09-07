@@ -3,6 +3,8 @@ import Loginbg from "../images/loginbg2.png";
 import logo from "../images/logo/logo-nbi-new.png";
 import formbg from "../images/formbg.png";
 import { useNavigate } from "react-router-dom";
+import OtpModal from "../components/OtpModal.jsx";
+
 
 
 function FieldError({ message }) {
@@ -84,7 +86,8 @@ function Signup() {
         setErrors((prev) => ({ ...prev, [name]: error }));
         setFocusedField("");
     }
-
+    const [showOtpModal, setShowOtpModal] = useState(false);
+    const [otpEmail, setOtpEmail] = useState("");
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -122,10 +125,14 @@ function Signup() {
                 setErrors((prev) => ({ ...prev, [field]: msg }));
                 return;
             }
+            if (response.message === "Account verification pending") {
+                setOtpEmail(response.email);
+                setShowOtpModal(true);
+            }
 
             setSuccessMessage("Account created! Redirecting to login...");
-
-            setTimeout(() => navigate("/login"), 2000);
+            setSuccessMessage("OTP sent to your email!");
+            setShowOtpModal(true);
 
         } catch {
             setErrors((prev) => ({ ...prev, username: "Network error. Please try again." }));
@@ -133,6 +140,10 @@ function Signup() {
             setLoading(false);
         }
     }
+
+
+
+
 
     return (
         <div className="relative h-screen w-full sm:bg-cover bg-top-left p-5"
@@ -504,8 +515,18 @@ function Signup() {
                             </div>
 
                         </form>
+
                     </div>
                 </div>
+                <OtpModal
+                    isOpen={showOtpModal}
+                    onClose={() => setShowOtpModal(false)}
+                    email={formData.email}
+                    onVerified={() => {
+                        setShowOtpModal(false);
+                        navigate("/login");
+                    }}
+                />
             </div>
         </div>
     );
