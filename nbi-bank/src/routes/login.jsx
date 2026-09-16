@@ -1,8 +1,9 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Loginbg from "../images/loginbg2.png";
 import logo from "../images/logo/logo-nbi-new.png";
 import formbg from "../images/formbg.png";
 import { useNavigate } from "react-router-dom";
+import OtpModal from "../components/OtpModal.jsx";
 
 
 
@@ -10,9 +11,53 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
 
-     const [focusedField, setFocusedField] = useState("");
-     const navigate = useNavigate();
+    const [focusedField, setFocusedField] = useState("");
+    const navigate = useNavigate();
+    const [showOtpModal, setShowOtpModal] = useState(false);
+    const [otpEmail, setOtpEmail] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:5000/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+                alert(data.error);
+                return;
+            }
+
+            setOtpEmail(data.email);
+            setShowOtpModal(true);
+
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Unable to connect to server");
+
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
 
 
@@ -139,7 +184,7 @@ function Login() {
                 </div>
 
 
-                <div className="flex flex-col items-center justify-center w-full md:w-1/2 py-6">
+                <form className="flex flex-col items-center justify-center w-full md:w-1/2 py-6" onSubmit={handleLogin}>
 
                     <div className="md:hidden bg-black/50 backdrop-blur-sm rounded-xl px-4 py-2 ">
                         <img
@@ -169,21 +214,21 @@ function Login() {
 
                         <div className="text-left mt-5">
                             <div>
-                                <label className={` text-sm ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Email Address or Mobile number</label><br></br>
+                                <label className={` text-sm ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}>Email Address or Mobile number</label><br></br>
 
                                 <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-mail text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></svg>
-                                    <input type="text" placeholder="Email address or Mobile number" onFocus={() => setFocusedField("EmailAddressorMobilenumber")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-mail text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></svg>
+                                    <input type="text" value={email} placeholder="Email address or Mobile number" onFocus={() => setFocusedField("EmailAddressorMobilenumber")} onBlur={() => setFocusedField("")} onChange={(e) => setEmail(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
 
                                 </div>
                             </div>
 
                             <div className="mt-3">
-                                <label className={` text-sm ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}>Password</label><br></br>
+                                <label className={` text-sm ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}>Password</label><br></br>
 
                                 <div className="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]" }`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
-                                    <input type="password" onFocus={() => setFocusedField("Password")} onBlur={() => setFocusedField("")} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Password" ></input>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                                    <input type="password" value={password} onFocus={() => setFocusedField("Password")} onBlur={() => setFocusedField("")} onChange={(e) => setPassword(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Password" ></input>
 
                                 </div>
 
@@ -193,7 +238,7 @@ function Login() {
 
                                 <div className="flex items-center gap-2">
 
-                                    <input type="checkbox" className="size-4 accent-[#d8b45c] cursor-pointer" />
+                                    <input type="checkbox" className="size-4 accent-[#d8b45c] cursor-pointer" required />
 
                                     <label className="text-gray-300 text-sm cursor-pointer">Remember Me</label>
 
@@ -206,9 +251,15 @@ function Login() {
                             </div>
 
                             <button
-                                className="w-full mt-5 py-3 rounded-xl font-medium text-black text-md cursor-pointer transition-all duration-300 hover:scale-[1.02]  active:scale-95 shadow-xl  bg-[linear-gradient(135deg,#A66C19,#c88b2f,#CF9533,#E1A940,#DFA43C,#c88b2f,#BB7E25)] "
+                                type="submit"
+                                disabled={loading}
+                                className={`w-full mt-5 py-3 rounded-xl font-medium text-black text-md transition-all duration-300 active:scale-95 shadow-xl bg-[linear-gradient(135deg,#A66C19,#c88b2f,#CF9533,#E1A940,#DFA43C,#c88b2f,#BB7E25)]
+                                      ${loading
+                                        ? "opacity-60 cursor-not-allowed"
+                                        : "cursor-pointer hover:scale-105"
+                                    }`}
                             >
-                                Login to Account
+                                {loading ? "Sending OTP..." : "Login to Account"}
                             </button>
 
 
@@ -291,7 +342,16 @@ function Login() {
 
 
                     </div>
-                </div>
+                </form>
+                <OtpModal
+                    isOpen={showOtpModal}
+                    onClose={() => setShowOtpModal(false)}
+                    email={otpEmail}
+                    onVerified={() => {
+                        setShowOtpModal(false);
+                        navigate("/dashboard");
+                    }}
+                />
 
             </div>
 

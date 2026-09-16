@@ -326,8 +326,12 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
                             )}
                         </button>
 
-
-                        <div className="flex items-center justify-center gap-1 mt-5">
+                        <div className="text-center ">
+                            <p className="text-gray-600 text-xs leading-relaxed">
+                                Incase check Spam if OTP isn't received.
+                            </p>
+                        </div>
+                        <div className="flex items-center justify-center gap-0 mt-5">
                             <span className="text-gray-500 text-xs">Didn't receive the code?</span>
                             <button
                                 onClick={handleResend}
@@ -340,6 +344,7 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
                                 {resendLoading ? "Sending..." : timer === 0 ? "Resend OTP" : `Resend in ${formatTime(timer)}`}
                             </button>
                         </div>
+
 
 
                     </div>
@@ -361,11 +366,7 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
                         </div>
 
 
-                        <div className="text-center">
-                            <p className="text-gray-600 text-xs leading-relaxed">
-                                Incase check Spam if OTP isn't received.
-                            </p>
-                        </div>
+
 
 
                     </div>
