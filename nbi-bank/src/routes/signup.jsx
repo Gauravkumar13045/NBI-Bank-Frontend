@@ -106,7 +106,7 @@ function Signup() {
 
         setLoading(true);
         try {
-            const res = await fetch("http://127.0.0.1:5000/signup", {
+            const res = await fetch("http://localhost:5000/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -521,7 +521,8 @@ function Signup() {
                 <OtpModal
                     isOpen={showOtpModal}
                     onClose={() => setShowOtpModal(false)}
-                    email={formData.email}
+                    email={otpEmail}
+                    purpose="signup"
                     onVerified={() => {
                         setShowOtpModal(false);
                         navigate("/login");

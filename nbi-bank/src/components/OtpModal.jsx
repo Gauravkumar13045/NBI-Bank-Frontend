@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-function OtpModal({ isOpen, onClose, email, onVerified }) {
+
+function OtpModal({ isOpen, onClose, email, onVerified, purpose }) {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    const [timer, setTimer] = useState(300); // 5 minutes
+    const [timer, setTimer] = useState(300);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [resendLoading, setResendLoading] = useState(false);
     const [resendSuccess, setResendSuccess] = useState(false);
     const inputRefs = useRef([]);
-    const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -91,10 +91,21 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
         setError("");
 
         try {
-            const res = await fetch("http://127.0.0.1:5000/verify-otp", {
+            const verifyUrl =
+                purpose === "login"
+                    ? "http://localhost:5000/verify-login-otp"
+                    : "http://localhost:5000/verify-otp";
+
+            const res = await fetch(verifyUrl, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, otp: otpValue }),
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    otp: otpValue,
+                }),
             });
             const data = await res.json();
 
@@ -106,7 +117,6 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
             }
 
             onVerified();
-            navigate("/login");
 
         } catch {
             setError("Network error. Please try again.");
@@ -121,7 +131,7 @@ function OtpModal({ isOpen, onClose, email, onVerified }) {
         setResendSuccess(false);
 
         try {
-            const res = await fetch("http://127.0.0.1:5000/resend-otp", {
+            const res = await fetch("http://localhost:5000/resend-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),

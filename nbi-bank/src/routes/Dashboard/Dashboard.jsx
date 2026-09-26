@@ -18,6 +18,10 @@ import BlackCard from "../../images/cards/blackcard.png";
 import GoldenCard from "../../images/cards/goldencard.png";
 import SilverCard from "../../images/cards/silvercard.png";
 const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+import { useNavigate } from "react-router-dom";
+import LogoutDialog from "../../components/LogoutDialog";
+import { LogOut } from "lucide-react";
+
 
 
 
@@ -44,6 +48,7 @@ function Dashboard() {
     const [TransactionState, SetTransactionState] = useState([]);
     const [LoadingState, SetLoadingState] = useState(true);
     const [error, seterror] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -383,6 +388,43 @@ function Dashboard() {
         return "Poor";
     }
 
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
+
+    const handleLogout = async () => {
+        setLogoutLoading(true);
+
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:5000/logout",
+                {
+                    method: "POST",
+                    credentials: "include",
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "Logout failed");
+                return;
+            }
+
+            setShowLogoutDialog(false);
+
+            navigate("/login", {
+                replace: true,
+            });
+
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            alert("Unable to connect to server");
+        } finally {
+            setLogoutLoading(false);
+        }
+    };
+
 
 
 
@@ -629,18 +671,17 @@ function Dashboard() {
 
                 </div>
 
-                <div className="flex items-center justify-center gap-3   py-3 rounded-xl cursor-pointer hover:bg-red-500/10 transition-all duration-300">
+                <div className="flex items-center justify-center gap-3   py-3 rounded-xl cursor-pointer hover:bg-red-500/10 transition-all duration-300" >
 
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-logout w-7  cursor-pointer text-red-500 ">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                        <path d="M9 12h12l-3 -3" />
-                        <path d="M18 15l3 -3" />
-                    </svg>
 
-                    <p className="text-red-500 text-sm font-medium  hidden lg:flex ">
-                        Logout
-                    </p>
+                    <button
+                        onClick={() => setShowLogoutDialog(true)}
+                        className="flex items-center gap-3 text-red-500 transition-colors hover:text-red-400 cursor-pointer">
+                        <LogOut size={22} />
+                        <span>Logout</span>
+                    </button>
+
+
 
                 </div>
 
@@ -2595,6 +2636,17 @@ function Dashboard() {
 
 
             </div >
+            <LogoutDialog
+                isOpen={showLogoutDialog}
+                onClose={() => {
+                    if (!logoutLoading) {
+                        ``
+                        setShowLogoutDialog(false);
+                    }
+                }}
+                onConfirm={handleLogout}
+                loading={logoutLoading}
+            />
 
         </div >
     );

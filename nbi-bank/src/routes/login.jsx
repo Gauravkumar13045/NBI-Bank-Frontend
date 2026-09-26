@@ -26,9 +26,10 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://127.0.0.1:5000/login",
+                "http://localhost:5000/login",
                 {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -37,6 +38,7 @@ function Login() {
                         password: password,
                     }),
                 }
+
             );
 
             const data = await response.json();
@@ -58,6 +60,10 @@ function Login() {
             setLoading(false);
         }
     };
+
+
+
+
     return (
 
 
@@ -218,7 +224,7 @@ function Login() {
 
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-mail text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "EmailAddressorMobilenumber" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /> <path d="M3 7l9 6l9 -6" /></svg>
-                                    <input type="text" value={email} placeholder="Email address or Mobile number" onFocus={() => setFocusedField("EmailAddressorMobilenumber")} onBlur={() => setFocusedField("")} onChange={(e) => setEmail(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
+                                    <input type="text" value={email} required placeholder="Email address or Mobile number" onFocus={() => setFocusedField("EmailAddressorMobilenumber")} onBlur={() => setFocusedField("")} onChange={(e) => setEmail(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 pl-12 w-full placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300"></input>
 
                                 </div>
                             </div>
@@ -228,7 +234,7 @@ function Login() {
 
                                 <div className="flex">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-lock text-[#D3D3D2] w-7 absolute mt-3.5 ml-3 ${focusedField === "Password" ? "text-[#d8b45c]" : "text-[#D3D3D2]"}`}> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /> <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /> <path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
-                                    <input type="password" value={password} onFocus={() => setFocusedField("Password")} onBlur={() => setFocusedField("")} onChange={(e) => setPassword(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Password" ></input>
+                                    <input type="password" value={password} required onFocus={() => setFocusedField("Password")} onBlur={() => setFocusedField("")} onChange={(e) => setPassword(e.target.value)} className=" mt-1 rounded-lg border-2 border-[#313030] text-gray-300 p-2.5 w-full pl-12 placeholder:text-sm bg-black/20 focus:outline-none focus:border-[#d8b45c] focus:shadow-[0_0_15px_rgba(216,180,92,0.2)] transition-all duration-300" placeholder="Password" ></input>
 
                                 </div>
 
@@ -333,11 +339,6 @@ function Login() {
                             </p>
 
 
-
-
-
-
-
                         </div>
 
 
@@ -347,6 +348,7 @@ function Login() {
                     isOpen={showOtpModal}
                     onClose={() => setShowOtpModal(false)}
                     email={otpEmail}
+                    purpose="login"
                     onVerified={() => {
                         setShowOtpModal(false);
                         navigate("/dashboard");
