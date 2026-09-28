@@ -396,7 +396,7 @@ function Dashboard() {
 
         try {
             const response = await fetch(
-                "http://127.0.0.1:5000/logout",
+                "http://localhost:5000/logout",
                 {
                     method: "POST",
                     credentials: "include",
@@ -424,6 +424,26 @@ function Dashboard() {
             setLogoutLoading(false);
         }
     };
+
+    const infofetcher = async () => {
+        try {
+            const response = await fetch("");
+            const data = await response.json();
+
+            if (!data) {
+                return (data.error)
+            }
+
+
+        } catch {
+
+
+        }
+
+
+    }
+
+
 
 
 
