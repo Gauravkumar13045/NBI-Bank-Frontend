@@ -131,7 +131,7 @@ function Signup() {
             }
 
             setSuccessMessage("Account created! Redirecting to login...");
-            setSuccessMessage("OTP sent to your email!");
+            setOtpEmail(response.email);
             setShowOtpModal(true);
 
         } catch {

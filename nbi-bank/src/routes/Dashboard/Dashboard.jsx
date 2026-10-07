@@ -443,6 +443,72 @@ function Dashboard() {
 
     }
 
+    const [accountInfofetcher, setAccountInfoFetcher] = useState(null);
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            const response = await fetch(
+                "http://localhost:5000/api/accounts",
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+
+            const data = await response.json();
+            setAccountInfoFetcher(data);
+
+
+        };
+
+        fetchAccounts();
+    }, []);
+    const accounts = accountInfofetcher?.accounts ?? [];
+    const totalNetWorth = accounts.reduce(
+        (total, account) => {
+            return total + Number(account.balance ?? 0);
+        },
+        0
+    );
+
+    const savingsAccount = accounts.find(
+        (account) =>
+            account.account_type?.toLowerCase() === "savings"
+    );
+
+    const currentAccount = accounts.find(
+        (account) =>
+            account.account_type?.toLowerCase() === "current"
+    );
+    const [visibleAccounts, setVisibleAccounts] = useState({});
+
+    const [currentUser, setCurrentUser] = useState();
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/me",
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error(data.error);
+                    return;
+                }
+
+                setCurrentUser(data.user);
+            } catch (error) {
+                console.error("Failed to fetch current user:", error);
+            }
+        };
+
+        fetchCurrentUser();
+    }, []);
 
 
 
@@ -751,7 +817,7 @@ function Dashboard() {
                     </div>
                     <div className="mt-2 ml-6  hidden md:block">
                         <p className="text-white text-sm leading-tight font-normal hidden md:block">Dashboard</p>
-                        <p className="text-white md:text-xl text-lg " style={{ fontFamily: "Playfair Display" }}>Welcome Back, <span className="text-[#d8b45c] ">Gaurav</span></p>
+                        <p className="text-white md:text-xl text-lg " style={{ fontFamily: "Playfair Display" }}>Welcome Back, <span className="text-[#d8b45c] "> {currentUser?.username?.split(" ")[0] || "User"}</span></p>
 
 
 
@@ -838,7 +904,7 @@ function Dashboard() {
                                 className="w-14 h-14  object-cover rounded-full border-2 border-[#d8b45c] ml-5"
                             />
                             <div className="ml-3  flex-col justify-center lg:block hidden ">
-                                <p className=" text-white text-sm font-semibold ml-1 lg:block hidden">Gaurav Kumar</p>
+                                <p className=" text-white text-sm font-semibold ml-1 lg:block hidden"> {currentUser?.username || "User"}</p>
                                 <div className="inline-flex items-center border cursor-pointer hover:shadow-[0_0_15px_rgba(216,180,92,0.3)] border-[#d8b45c] rounded-full px-1.5 py-0.5 mt-2  text-xs w-max"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-crown text-[#d8b45c] w-5 "> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6" /> </svg>
                                     <p className="text-[#d8b45c] ml-1 text-[10px] ">NBI Premium Client</p>
                                 </div>
@@ -861,128 +927,29 @@ function Dashboard() {
 
 
 
+                {/* ------------------------------------------------- */}
+                {/* ------------------------------------------------- */}
 
 
                 <main className="flex-1 overflow-y-auto p-5 scrollbar-none">
+
                     <div className="mt-3 border border-[#494133] w-full p-5 rounded-lg backdrop-blur-md bg-white/5 md:text-left text-center">
                         <p className="text-[#d8b45c] text-xs font-semibold">ACCOUNTS OVERVIEW </p>
+
 
                         <div className="sm:grid flex w-full  md:grid-cols-2 xl:grid-cols-4  gap-5 p-5">
                             {/* <div className="md:grid flex flex-cols-1 md:grid-cols-2 md:xl:grid-cols-4 md:gap-5 md:p-5 h-25 md:h-max md:overflow-none"> */}
 
-                            <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
-                                <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
-                                    <p className="text-[#d8b45c] text-sm font-medium">Saving Account</p>
-                                    <p className="text-[#d8b45c] text-xs">XXXX 5678 9012</p><br></br>
+                            {savingsAccount && (
+                                <AccountCard account={savingsAccount} data={data} />
+                            )}
 
-                                    <p className="text-white text-xs">Available Balance</p>
-                                    <p className="text-white text-lg font-medium "><span>₹&nbsp;</span><span className={`${showSaving ? "inline-block align-top" : "inline-flex align-middle"}`}>{showSaving ? "56,23,252" : "********"}</span></p>
-
-
-                                </div>
-                                <div className="w-32 h-full ml-auto hidden min-[400px]:block">
-                                    <div className="flex justify-end items-center gap-1">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { setShowSaving(!showSaving) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-eye w-5 text-[#d8b45c] cursor-pointer ${showSaving ? "block" : "hidden"}`}>
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                        </svg>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { setShowSaving(!showSaving) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-eye-off  w-5 text-[#d8b45c] cursor-pointer ${showSaving ? "hidden" : "block"}`}>
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
-                                            <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
-                                            <path d="M3 3l18 18" />
-                                        </svg>
-
-                                        <p className="text-green-500  rounded-full  pl-2 pr-2 font-medium bg-[#0E1A12] m-1 text-sm float-right">Active</p>
-
-                                    </div>
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 25 }}>
-                                            <defs>
-                                                <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#d8b45c" stopOpacity={0.35} />
-                                                    <stop offset="100%" stopColor="#d8b45c" stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
-
-                                            <Area
-                                                type="natural"
-                                                dataKey="balance"
-                                                stroke="#E2D17F"
-                                                strokeWidth={2}
-                                                fill="url(#goldGradient)"
-
-                                            />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                </div>
-
-
-
-                            </div>
-
-                            <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
-                                <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
-                                    <p className="text-[#d8b45c] text-sm font-medium">Current Account</p>
-                                    <p className="text-[#d8b45c] text-xs">XXXX 6549 5187</p><br></br>
-
-                                    <p className="text-white text-xs">Available Balance</p>
-                                    <p className="text-white text-lg font-medium "><span>₹&nbsp;</span><span className={`${showCurrent ? "inline-block align-top" : "inline-flex align-middle"}`}>{showCurrent ? "12,98,223" : "********"}</span></p>
-
-                                </div>
-                                <div className="w-32 h-full ml-auto hidden min-[400px]:block">
-                                    <div className="flex justify-end items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { setShowCurrent(!showCurrent) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-eye w-5 text-[#d8b45c] cursor-pointer ${showCurrent ? "block" : "hidden"}`}>
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                        </svg>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { setShowCurrent(!showCurrent) }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={`icon icon-tabler icons-tabler-outline icon-tabler-eye-off  w-5 text-[#d8b45c] cursor-pointer ${showCurrent ? "hidden" : "block"}`}>
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
-                                            <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
-                                            <path d="M3 3l18 18" />
-                                        </svg>
-
-                                        <p className="text-green-500  rounded-full  pl-2 pr-2 font-medium bg-[#0E1A12] m-1 text-sm float-right">Active</p>
-
-                                    </div>
-                                    <ResponsiveContainer >
-                                        <AreaChart
-                                            data={data}
-                                            margin={{
-                                                top: 20,
-                                                right: 10,
-                                                left: 0,
-                                                bottom: 25
-                                            }}
-                                        >
-                                            <defs>
-                                                <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#d8b45c" stopOpacity={0.35} />
-                                                    <stop offset="100%" stopColor="#d8b45c" stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
-
-                                            <Area
-                                                type="natural"
-                                                dataKey="balance"
-                                                stroke="#E2D17F"
-                                                strokeWidth={2}
-                                                fill="url(#goldGradient)"
-
-                                            />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                </div>
-
-
-
-                            </div>
+                            {/* CURRENT */}
+                            {currentAccount ? (
+                                <AccountCard account={currentAccount} data={data} />
+                            ) : (
+                                <OpenCurrentAccountCard />
+                            )}
 
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
                                 <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
@@ -1019,14 +986,15 @@ function Dashboard() {
 
 
                             </div>
+                            {/* ------------------------------------------------- */}
 
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
                                 <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
                                     <p className="text-[#d8b45c] text-sm font-medium">Total Net Worth </p>
-                                    <p className="text-[#d8b45c] text-xs">XXXX 5678 9012</p><br></br>
+                                    <p className="text-gray-400 text-xs"> Across <span className="text-[#d8b45c]">1</span> Account</p><br></br>
 
                                     <p className="text-white text-xs">Available Balance</p>
-                                    <p className="text-white text-lg font-medium"><span >₹&nbsp;</span><span className={`${showNetWorth ? "inline-block align-top" : "inline-flex align-middle"}`}>{showNetWorth ? "69,21,475" : "********"}</span></p>
+                                    <p className="text-white text-lg font-medium"><span >₹&nbsp;</span><span className={`${showNetWorth ? "inline-block align-top" : "inline-flex align-middle"}`}>{showNetWorth ? totalNetWorth.toLocaleString("en-IN") : "********"}</span></p>
 
                                 </div>
                                 <div className="w-32 h-full ml-auto hidden min-[400px]:block ">
@@ -1080,7 +1048,11 @@ function Dashboard() {
 
                             </div>
                         </div>
+
+                        {/* ------------------------------------------------- */}
+
                     </div>
+
                     <div className="mt-3 border border-[#494133] w-full p-5 md:pr-10 rounded-lg backdrop-blur-md bg-white/5">
                         <div className="grid grid-cols-1 xl:grid-cols-[60%_40%] p-2 gap-5  ">
                             <div className="border border-[#494133] p-3 rounded-lg  ">
@@ -2673,3 +2645,210 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+
+
+
+
+
+
+
+function AccountCard({ account, data }) {
+
+    const [showBalance, setShowBalance] = useState(false);
+
+    return (
+        <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
+
+            {/* LEFT */}
+            <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
+
+                {/* Account Type */}
+                <p className="text-[#d8b45c] text-sm font-medium">
+                    {account.account_type} Account
+                </p>
+
+                {/* Account Number */}
+                <p className="text-[#d8b45c] text-xs">
+                    XXXX XXXX {String(account.account_number).slice(-4)}
+                </p>
+
+                <br />
+
+                {/* Balance */}
+                <p className="text-white text-xs">
+                    Available Balance
+                </p>
+
+                <p className="text-white text-lg font-medium">
+                    <span>₹&nbsp;</span>
+
+                    <span className={`${showBalance ? "inline-block align-top" : "inline-flex align-middle"}`}>
+                        {showBalance
+                            ? Number(account.balance ?? 0).toLocaleString("en-IN")
+                            : "********"}
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            {/* RIGHT */}
+            <div className="w-32 h-full ml-auto hidden min-[400px]:block">
+
+                <div className="flex justify-end items-center gap-1">
+
+                    {/* EYE */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        onClick={() => setShowBalance(false)}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`w-5 text-[#d8b45c] cursor-pointer ${showBalance ? "block" : "hidden"
+                            }`}
+                    >
+                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+
+                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                    </svg>
+
+
+                    {/* EYE OFF */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        onClick={() => setShowBalance(true)}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`w-5 text-[#d8b45c] cursor-pointer ${showBalance ? "hidden" : "block"
+                            }`}
+                    >
+                        <path d="M10.585 10.587a2 2 0 1 0 2.829 2.828" />
+
+                        <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+
+                        <path d="M3 3l18 18" />
+                    </svg>
+
+
+                    {/* STATUS */}
+                    <p className="text-green-500 rounded-full px-2 font-medium bg-[#0E1A12] m-1 text-sm">
+                        {account.account_status}
+                    </p>
+
+                </div>
+
+
+                {/* CHART */}
+                <div className="w-full h-20">
+
+                    <ResponsiveContainer
+                        width="100%"
+                        height="100%"
+                    >
+                        <AreaChart data={data}>
+
+                            <defs>
+
+                                <linearGradient
+                                    id={`goldGradient-${account.id}`}
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                >
+
+                                    <stop
+                                        offset="0%"
+                                        stopColor="#d8b45c"
+                                        stopOpacity={0.35}
+                                    />
+
+                                    <stop
+                                        offset="100%"
+                                        stopColor="#d8b45c"
+                                        stopOpacity={0}
+                                    />
+
+                                </linearGradient>
+
+                            </defs>
+
+
+                            <Area
+                                type="natural"
+                                dataKey="balance"
+                                stroke="#E2D17F"
+                                strokeWidth={2}
+                                fill={`url(#goldGradient-${account.id})`}
+                            />
+
+                        </AreaChart>
+
+                    </ResponsiveContainer>
+
+                </div>
+
+            </div>
+
+        </div>
+    );
+}
+
+
+
+function OpenCurrentAccountCard() {
+    return (
+        <div className="border border-dashed border-[#494133] p-3 rounded-lg flex flex-col justify-between">
+
+            <div>
+
+                <div className="flex justify-between items-start">
+
+                    <div>
+                        <p className="text-[#d8b45c] text-sm font-medium">
+                            Current Account
+                        </p>
+
+                        <p className="text-gray-500 text-xs mt-1">
+                            Not opened yet
+                        </p>
+                    </div>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#d8b45c]" >
+                        <path d="M3 21h18" /> <path d="M5 21v-7" /> <path d="M9 21v-7" /> <path d="M15 21v-7" /> <path d="M19 21v-7" /> <path d="M3 10l9-6l9 6" /> <path d="M4 10h16" />
+                    </svg>
+
+                </div>
+
+
+
+            </div>
+
+            {/* Open Account Button */}
+            <button
+                onClick={() => {
+                    // yahan baad mein modal open karenge
+                    console.log("Open Current Account");
+                }}
+                className="border border-[#d8b45c] cursor-pointer text-[#d8b45c] rounded-full px-5 py-2 text-xs font-medium mx-auto mt-4 flex items-center gap-2 hover:bg-[#d8b45c] hover:text-black transition-all"
+            >
+                <span className="text-lg leading-none">
+                    +
+                </span>
+
+                Open Account
+            </button>
+
+        </div>
+    );
+}

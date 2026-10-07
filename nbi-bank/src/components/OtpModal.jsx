@@ -131,7 +131,7 @@ function OtpModal({ isOpen, onClose, email, onVerified, purpose }) {
         setResendSuccess(false);
 
         try {
-            const res = await fetch("http://localhost:5000/resend-otp", {
+            const res = await fetch("http://localhost:5000/resend-login-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
