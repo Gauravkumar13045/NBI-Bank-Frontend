@@ -50,37 +50,40 @@ function Dashboard() {
     const [error, seterror] = useState(null);
     const navigate = useNavigate();
 
+
     useEffect(() => {
-
         const fetchTransactions = async () => {
-
             try {
-
-                const response = await fetch("/json/transaction.json");
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch transactions");
-                }
+                const response = await fetch(
+                    "http://localhost:5000/api/transactions",
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    }
+                );
 
                 const data = await response.json();
 
-                SetTransactionState(data.transaction);
+                if (!response.ok) {
+                    throw new Error(
+                        data.error || "Failed to fetch transactions"
+                    );
+                }
+
+                SetTransactionState(data.transactions || []);
 
             } catch (err) {
-
                 seterror(err.message);
-
             } finally {
-
                 SetLoadingState(false);
-
             }
-
         };
 
         fetchTransactions();
-
     }, []);
+
+
+
 
     const [chartDialogBox, SetchartDialogBox] = useState(false);
 
@@ -976,23 +979,16 @@ function Dashboard() {
                                         strokeWidth={10}
                                     />
 
-
-
-
-
-
                                 </div>
 
-
-
                             </div>
+
                             {/* ------------------------------------------------- */}
 
                             <div className="border border-[#494133] p-3 rounded-lg flex justify-between items-start">
                                 <div className="text-center min-[400px]:text-left w-full min-[400px]:w-fit">
                                     <p className="text-[#d8b45c] text-sm font-medium">Total Net Worth </p>
-                                    <p className="text-gray-400 text-xs"> Across <span className="text-[#d8b45c]">1</span> Account</p><br></br>
-
+                                    <p className="text-gray-400 text-xs"> Across <span className="text-[#d8b45c]">{accounts.length}</span> Account</p><br></br>
                                     <p className="text-white text-xs">Available Balance</p>
                                     <p className="text-white text-lg font-medium"><span >₹&nbsp;</span><span className={`${showNetWorth ? "inline-block align-top" : "inline-flex align-middle"}`}>{showNetWorth ? totalNetWorth.toLocaleString("en-IN") : "********"}</span></p>
 
@@ -1012,7 +1008,26 @@ function Dashboard() {
                                             <path d="M3 3l18 18" />
                                         </svg>
 
-                                        <p className="text-green-500  rounded-full  pl-2 pr-2 font-medium bg-[#0E1A12] m-1 text-sm float-right">Active</p>
+                                        <p className={`text-green-500 rounded-full px-2 font-medium bg-[#0E1A12] m-1 text-sm
+                                                ${accounts.length > 0 &&
+                                                accounts.every(
+                                                    (account) =>
+                                                        account.account_status?.toLowerCase() === "active"
+                                                )
+                                                ? "text-green-500 bg-green-900/30"
+                                                : "text-red-500 bg-red-900/30"
+                                            }`}>
+
+
+                                            {accounts.length > 0 &&
+                                                accounts.every(
+                                                    (account) =>
+                                                        account.account_status?.toLowerCase() === "active"
+                                                )
+                                                ? "Active"
+                                                : "Inactive"}
+                                        </p>
+
 
                                     </div>
                                     <ResponsiveContainer width="100%" height="100%">
@@ -1114,41 +1129,69 @@ function Dashboard() {
                                             {error}
                                         </p>
                                     ) : (
-                                        TransactionState.map((item, index) => (
-                                            <div key={index} className="flex justify-between items-center p-3">
+                                        TransactionState.length === 0 ? (
+                                            <p className="text-gray-400 text-sm p-4">
+                                                No transactions found.
+                                            </p>
+                                        ) : (
+                                            TransactionState.map((item) => {
+                                                const isSender = accounts.some(
+                                                    (account) =>
+                                                        String(account.id) === String(item.sender_account_id)
+                                                );
 
-                                                <div className="flex gap-4">
+                                                const isDebit = item.transaction_type === "debit";
+
+                                                const isOutgoing =
+                                                    isDebit ||
+                                                    (item.transaction_type === "transfer" && isSender);
+
+                                                return (
                                                     <div
-                                                        className="w-10 h-10 rounded-lg overflow-hidden shadow-[0_0_3px_rgba(216,180,92,0.2)]"
-                                                        dangerouslySetInnerHTML={{ __html: item.img }}
-                                                    />
-
-                                                    <div>
-                                                        <p className="text-sm font-medium">{item.PaymentName}</p>
-                                                        <p className="text-xs text-gray-400">
-                                                            {item.PaymentDate} • {item.PaymentTime}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="bg-[#231A0B] rounded-xl px-3 py-1 hidden sm:block">
-                                                    <p className="text-sm">{item.Categories}</p>
-                                                </div>
-
-                                                <div>
-                                                    <p
-                                                        className={
-                                                            item.Type === "credit"
-                                                                ? "text-green-500 font-medium"
-                                                                : "text-red-500 font-medium"
-                                                        }
+                                                        key={item.id}
+                                                        className="flex justify-between items-center p-3 border-b border-white/5"
                                                     >
-                                                        {item.Type === "credit" ? "+" : "-"} ₹ {item.PaymentAmount}
-                                                    </p>
-                                                </div>
+                                                        <div className="flex gap-4 items-center">
+                                                            <div className="w-10 h-10 rounded-lg bg-[#d8b45c]/10 flex items-center justify-center text-[#d8b45c]">
+                                                                {item.transaction_type === "transfer" ? "↔" : "₹"}
+                                                            </div>
 
-                                            </div>
-                                        ))
+                                                            <div>
+                                                                <p className="text-sm font-medium text-white">
+                                                                    {item.description || item.transaction_type}
+                                                                </p>
+
+                                                                <p className="text-xs text-gray-400">
+                                                                    {new Date(item.created_at).toLocaleString("en-IN")}
+                                                                </p>
+
+                                                                <p className="text-xs text-gray-500">
+                                                                    Ref: {item.reference_id}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="text-right">
+                                                            <p className={
+                                                                isOutgoing
+                                                                    ? "text-red-500 font-medium"
+                                                                    : "text-green-500 font-medium"
+                                                            }>
+                                                                {isOutgoing ? "-" : "+"} ₹
+                                                                {Number(item.amount).toLocaleString("en-IN", {
+                                                                    minimumFractionDigits: 2,
+                                                                    maximumFractionDigits: 2
+                                                                })}
+                                                            </p>
+
+                                                            <p className="text-xs text-gray-400 capitalize">
+                                                                {item.transaction_status}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        )
                                     )}
                                 </div>
 
@@ -2834,10 +2877,9 @@ function OpenCurrentAccountCard() {
 
             </div>
 
-            {/* Open Account Button */}
+
             <button
                 onClick={() => {
-                    // yahan baad mein modal open karenge
                     console.log("Open Current Account");
                 }}
                 className="border border-[#d8b45c] cursor-pointer text-[#d8b45c] rounded-full px-5 py-2 text-xs font-medium mx-auto mt-4 flex items-center gap-2 hover:bg-[#d8b45c] hover:text-black transition-all"
